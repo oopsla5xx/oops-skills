@@ -4,34 +4,34 @@ Every agent reads this file to know the specific commands for this project. Do n
 
 ## test
 <!-- TODO: replace with the project's test command -->
-Run: `npm test`
+Run: `<replace-with-project-test-command>`
 
 ## test:watch
-Run: `npm test -- --watch`
+Run: `<replace-with-project-test-watch-command>`
 
 ## build
 <!-- TODO -->
-Run: `npm run build`
+Run: `<replace-with-project-build-command>`
 
 ## lint
 <!-- TODO -->
-Run: `npm run lint`
+Run: `<replace-with-project-lint-command>`
 
 ## typecheck
 <!-- TODO -->
-Run: `npm run typecheck`
+Run: `<replace-with-project-typecheck-command>`
 
 ## dev
 <!-- TODO: command to start the local environment -->
-Run: `npm run dev`
+Run: `<replace-with-project-dev-command>`
 
 ## deploy:staging
 <!-- TODO -->
-Run: `./scripts/deploy.sh staging`
+Run: `<replace-with-project-staging-deploy-command>`
 
 ## deploy:prod
 <!-- TODO -->
-Run: `./scripts/deploy.sh prod`
+Run: `<replace-with-project-production-deploy-command>`
 
 ---
 <!-- Add project-specific commands below using the same format -->
