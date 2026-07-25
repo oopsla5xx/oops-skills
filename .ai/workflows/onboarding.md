@@ -1,30 +1,30 @@
 # Agent Onboarding Protocol
 
-Khi bắt đầu làm việc trên project này lần đầu (hoặc sau khoảng thời gian dài), đọc theo thứ tự sau.
+When starting work on this project for the first time (or after a long break), read in the following order.
 
-## Bước 1 — Hiểu project (bắt buộc)
+## Step 1 — Understand the project (required)
 
-1. Đọc `.ai/context/architecture.md` — hệ thống làm gì, các module chính, luồng dữ liệu
-2. Đọc `.ai/context/conventions.md` — quy tắc code, ví dụ đúng/sai
-3. Đọc `.ai/commands.md` — lệnh build, test, deploy của project này
+1. Read `.ai/context/architecture.md` — what the system does, the main modules, data flow
+2. Read `.ai/context/conventions.md` — coding rules, correct/incorrect examples
+3. Read `.ai/commands.md` — build, test, deploy commands for this project
 
-## Bước 2 — Sync context (nếu dùng Claude Code)
+## Step 2 — Sync context (if using Claude Code)
 
-Chạy `/sync-ai-context` để kiểm tra file nào bị stale trước khi đọc. Nếu tool không available, bỏ qua bước này.
+Run `/sync-ai-context` to check which files are stale before reading. If the tool is not available, skip this step.
 
-## Bước 3 — Kiểm tra trạng thái hiện tại
+## Step 3 — Check current state
 
-4. Đọc `.ai/status.md` — có task nào đang in-progress không? Có gì bị blocked không?
-5. Nếu có task brief liên quan trong `.ai/tasks/` — đọc brief đó
+4. Read `.ai/status.md` — are there any in-progress tasks? Is anything blocked?
+5. If there is a relevant task brief in `.ai/tasks/` — read that brief
 
-## Bước 4 — Sẵn sàng làm việc
+## Step 4 — Ready to work
 
-Sau khi đọc xong các file trên:
-- Nếu được giao task: follow `.ai/workflows/task-flow.md`
-- Nếu chưa rõ task: hỏi lại, không tự assume
+After reading the above files:
+- If assigned a task: follow `.ai/workflows/task-flow.md`
+- If the task is unclear: ask for clarification, do not assume
 
-## Khi nào cần onboard lại
+## When to re-onboard
 
-- Sau khi merge thay đổi lớn vào `main`
-- Khi thấy mình đang làm trái với conventions
-- Khi không chắc một quyết định kỹ thuật có phù hợp với architecture không
+- After merging large changes into `main`
+- When you notice yourself acting against conventions
+- When unsure whether a technical decision fits the architecture

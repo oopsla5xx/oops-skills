@@ -5,15 +5,15 @@ description: Generate a pull request description by filling in the .github/PULL_
 
 # Create PR Description
 
-Điền PR template từ `.github/PULL_REQUEST_TEMPLATE.md` dựa trên spec và git history. Output sẵn sàng paste vào GitHub hoặc dùng với `gh pr create`.
+Fill in the PR template from `.github/PULL_REQUEST_TEMPLATE.md` based on the spec and git history. Output is ready to paste into GitHub or use with `gh pr create`.
 
 ---
 
 ## Run
 
-### Bước 1 — Thu thập context
+### Step 1 — Gather context
 
-Chạy tất cả song song:
+Run all in parallel:
 
 ```bash
 # Template
@@ -26,84 +26,84 @@ git log main...HEAD --oneline
 git diff --stat main...HEAD
 ```
 
-Đọc spec: `.ai/tasks/<tên-task>.md` (Goal, Scope, Test plan, Constraints)
+Read spec: `.ai/tasks/<task-name>.md` (Goal, Scope, Test plan, Constraints)
 
-### Bước 2 — Map từng section của template
+### Step 2 — Map each section of the template
 
-Với mỗi section trong template, lấy nội dung từ nguồn tương ứng:
+For each section in the template, pull content from the corresponding source:
 
-| Section | Lấy từ |
+| Section | Source |
 |---|---|
-| **What** | Goal trong spec — 1-2 câu súc tích |
-| **Why** | Lý do từ cuộc thảo luận clarify-scope, hoặc Constraints trong spec |
-| **Changes** | `git diff --stat` + Scope trong spec |
-| **Test plan** | Test plan items trong spec (convert sang checklist) |
-| **Manual test guide** | Link đến `<tên-task>-manual-tests.md` nếu có |
-| **Checklist** | Điền lệnh test thật từ `.ai/commands.md` |
-| **Notes for reviewer** | Constraints, trade-off, hoặc gotcha quan trọng từ spec |
+| **What** | Goal in spec — 1-2 concise sentences |
+| **Why** | Reason from clarify-scope discussion, or Constraints in spec |
+| **Changes** | `git diff --stat` + Scope in spec |
+| **Test plan** | Test plan items in spec (convert to checklist) |
+| **Manual test guide** | Link to `<task-name>-manual-tests.md` if it exists |
+| **Checklist** | Fill in real test commands from `.ai/commands.md` |
+| **Notes for reviewer** | Constraints, trade-offs, or important gotchas from spec |
 
-### Bước 3 — Viết description
+### Step 3 — Write the description
 
-Quy tắc:
+Rules:
 
-**What:** Mô tả WHAT, không phải HOW. Đọc xong biết ngay feature/fix là gì.
+**What:** Describe WHAT, not HOW. After reading, the reader immediately knows what the feature/fix is.
 ```
-# Tốt
+# Good
 Add password reset via email — users can request a reset link that expires in 1 hour.
 
-# Tệ
+# Bad
 Implement the reset token logic and add the API endpoints for password reset flow.
 ```
 
-**Why:** Lý do business hoặc technical. Không giải thích lại WHAT.
+**Why:** Business or technical reason. Do not re-explain WHAT.
 ```
-# Tốt
+# Good
 Required by auth security audit — tokens previously had no expiry.
 
-# Tệ
+# Bad
 Because we need to allow users to reset their password.
 ```
 
-**Changes:** Dùng `git diff --stat` để lấy danh sách file, thêm 1 dòng context cho file quan trọng.
+**Changes:** Use `git diff --stat` to get the file list, add 1 line of context for important files.
 ```
 - `src/auth/reset-token.ts` (new) — token generation and validation
 - `src/api/routes/auth.ts` — 2 new endpoints: request + confirm
 - `src/email/templates/` — reset-password email template
 ```
 
-**Notes for reviewer:** Chỉ ghi những gì reviewer KHÔNG thể biết từ code:
-- Trade-off đã cân nhắc
-- Quyết định bỏ qua một approach nào đó và lý do
-- Known limitation hoặc follow-up cần làm
+**Notes for reviewer:** Only include what a reviewer CANNOT know from the code:
+- Trade-offs considered
+- Decisions to skip a particular approach and why
+- Known limitations or follow-up work needed
 
-### Bước 4 — Output
+### Step 4 — Output
 
-**Nếu có `gh` CLI:**
+**If `gh` CLI is available:**
 ```bash
 gh pr create \
-  --title "<type>: <tên ngắn gọn>" \
+  --title "<type>: <short name>" \
   --body "$(cat <<'EOF'
-<nội dung description>
+<description content>
 EOF
 )"
 ```
 
-**Nếu không có `gh`:**
-In ra description đầy đủ, sẵn sàng để paste vào GitHub.
+**If `gh` is not available:**
+Print the full description, ready to paste into GitHub.
 
 **PR title format:**
 ```
-feat: <what>       ← feature mới
+feat: <what>       ← new feature
 fix: <what>        ← bug fix
-refactor: <what>   ← không thay đổi behavior
+refactor: <what>   ← no behavior change
 chore: <what>      ← tooling, deps, config
 ```
 
 ---
 
-## Nếu project không có PR template
+## If the project has no PR template
 
-Dùng fallback structure:
+Use the fallback structure:
 
 ```markdown
 ## What
@@ -113,14 +113,14 @@ Dùng fallback structure:
 ## Notes for reviewer
 ```
 
-Sau đó gợi ý tạo `.github/PULL_REQUEST_TEMPLATE.md` cho project (template có trong oops-skills).
+Then suggest creating `.github/PULL_REQUEST_TEMPLATE.md` for the project (template available in oops-skills).
 
 ---
 
 ## Gotchas
 
-**Không copy-paste commit message làm description.** Commit message mô tả từng bước; PR description mô tả toàn bộ thay đổi như một đơn vị.
+**Do not copy-paste commit messages as the description.** Commit messages describe individual steps; a PR description describes the entire change as a single unit.
 
-**"What" và "Why" hay bị nhầm.** What = kết quả/output. Why = lý do tồn tại. Nếu câu bắt đầu bằng "Because" hoặc "In order to" → đó là Why, không phải What.
+**"What" and "Why" are often confused.** What = result/output. Why = reason for existence. If a sentence starts with "Because" or "In order to" → that is Why, not What.
 
-**Checklist phải có lệnh thật.** `- [ ] Tests xanh (npm test)` có ích hơn `- [ ] Tests pass`.
+**Checklist must have real commands.** `- [ ] Tests pass (npm test)` is more useful than `- [ ] Tests pass`.

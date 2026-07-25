@@ -1,16 +1,16 @@
 # Status
 
-File này dùng để phối hợp giữa nhiều agent. Luôn đọc trước khi bắt đầu task, luôn cập nhật khi bắt đầu và kết thúc.
+This file is used for coordination between multiple agents. Always read before starting a task, always update when starting and finishing.
 
 ## In Progress
 
-<!-- Format: - [agent/người] task-name — mô tả ngắn — bắt đầu: YYYY-MM-DD -->
+<!-- Format: - [agent/person] task-name — short description — started: YYYY-MM-DD -->
 
 ## Blocked
 
-<!-- Format: - task-name — blocked bởi: X — cần: Y -->
+<!-- Format: - task-name — blocked by: X — needs: Y -->
 
 ## Recently Completed
 
-<!-- Giữ 3-5 entry gần nhất để context -->
-<!-- Format: - task-name — xong: YYYY-MM-DD — notes: ... -->
+<!-- Keep the 3-5 most recent entries for context -->
+<!-- Format: - task-name — done: YYYY-MM-DD — notes: ... -->

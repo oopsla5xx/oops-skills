@@ -5,34 +5,34 @@ description: Break a spec file into ordered, concrete implementation steps with 
 
 # Plan Tasks
 
-Đọc spec đã viết, chia nhỏ thành các bước implement có thứ tự rõ ràng. Output là một `## Plan` section được append vào cuối file spec — không tạo file mới.
+Read the written spec, break it down into ordered implementation steps. Output is a `## Plan` section appended to the end of the spec file — do not create a new file.
 
 ---
 
 ## Run
 
-### Bước 1 — Đọc đầu vào
+### Step 1 — Read the inputs
 
 ```
-Đọc: .ai/tasks/<tên-task>.md          ← spec cần plan
-Đọc: .ai/context/architecture.md      ← hiểu cấu trúc hiện tại
+Read: .ai/tasks/<task-name>.md          ← spec to plan
+Read: .ai/context/architecture.md      ← understand current structure
 ```
 
-Trả lời các câu hỏi này trước khi viết plan:
-- Có code nào hiện tại cần đọc/sửa không? Nếu có, đọc ngay.
-- Scope mới hoàn toàn (greenfield) hay sửa code cũ (brownfield)?
-- Có dependency nào cần tạo trước không (DB schema, interface, type)?
+Answer these questions before writing the plan:
+- Is there existing code that needs to be read/modified? If so, read it now.
+- Is this completely new (greenfield) or modifying existing code (brownfield)?
+- Are there any dependencies that must be created first (DB schema, interface, type)?
 
-### Bước 2 — Tìm "atoms"
+### Step 2 — Find "atoms"
 
-Một **atom** là đơn vị nhỏ nhất có thể verify độc lập.
+An **atom** is the smallest unit that can be verified independently.
 
-Cách tìm: đọc Scope trong spec → với mỗi file/module, tự hỏi "phần nhỏ nhất có thể làm và test độc lập là gì?"
+How to find them: read Scope in the spec → for each file/module, ask "what is the smallest piece that can be done and tested independently?"
 
-Ví dụ decompose:
+Example decomposition:
 ```
-Scope: "thêm password reset"
-→ Tách thành:
+Scope: "add password reset"
+→ Break into:
    - token generation logic (pure function, testable)
    - DB schema (migration)
    - API endpoint request (HTTP layer)
@@ -41,82 +41,82 @@ Scope: "thêm password reset"
    - wiring (integration)
 ```
 
-### Bước 3 — Sắp xếp theo thứ tự dependency
+### Step 3 — Order by dependency
 
-Thứ tự chuẩn (từ dưới lên):
+Standard order (bottom-up):
 
 ```
-1. Types / interfaces / contracts  ← không phụ thuộc vào ai
-2. Pure business logic              ← phụ thuộc vào types
+1. Types / interfaces / contracts  ← depend on nothing
+2. Pure business logic              ← depends on types
 3. Data persistence (migrations, models)
 4. Side effects (email, queue, cache)
-5. API / interface layer            ← gọi vào logic + persistence
-6. Wiring / integration             ← nối các layer lại
-7. Tests bao phủ toàn flow          ← xác nhận end-to-end
+5. API / interface layer            ← calls into logic + persistence
+6. Wiring / integration             ← connects the layers
+7. Tests covering the full flow     ← confirms end-to-end
 ```
 
-Quy tắc: bước N không được gọi code của bước N+1.
+Rule: step N must not call code from step N+1.
 
-### Bước 4 — Viết plan
+### Step 4 — Write the plan
 
-Append vào cuối file spec:
+Append to the end of the spec file:
 
 ```markdown
 ## Plan
 
-<!-- Thực hiện theo thứ tự. Mỗi bước chỉ bắt đầu khi bước trước done. -->
+<!-- Execute in order. Each step only begins when the previous one is done. -->
 
-- [ ] 1. <động từ> <file/function cụ thể> — <mô tả ngắn>
-         Done khi: <tiêu chí verify cụ thể>
+- [ ] 1. <verb> <specific file/function> — <short description>
+         Done when: <specific, verifiable criteria>
 
 - [ ] 2. ...
 ```
 
-**Yêu cầu cho mỗi bước:**
-- Bắt đầu bằng động từ hành động: `Create`, `Add`, `Update`, `Remove`, `Wire`, `Migrate`, `Test`
-- Ghi tên file/function cụ thể nếu biết
-- `Done khi:` phải verify được ngay (chạy lệnh, xem output, đọc code) — không được là "cảm giác đúng"
+**Requirements for each step:**
+- Start with an action verb: `Create`, `Add`, `Update`, `Remove`, `Wire`, `Migrate`, `Test`
+- Include specific file/function names if known
+- `Done when:` must be immediately verifiable (run a command, check output, read code) — must not be a "gut feeling"
 
-**Ví dụ bước tốt:**
+**Example of a good step:**
 ```
-- [ ] 1. Create `src/auth/reset-token.ts` — hàm generateToken() và validateToken()
-         Done khi: unit test pass cho cả hai hàm, kể cả case token hết hạn
-```
-
-**Ví dụ bước tệ:**
-```
-- [ ] 1. Implement password reset logic   ← quá rộng, không biết "done" là gì
-- [ ] 2. Make sure it works              ← không verify được
+- [ ] 1. Create `src/auth/reset-token.ts` — generateToken() and validateToken() functions
+         Done when: unit tests pass for both functions, including the expired token case
 ```
 
-### Bước 5 — Kiểm tra chất lượng plan
-
-Trước khi lưu:
-
+**Example of a bad step:**
 ```
-[ ] Mỗi bước có "Done khi:" cụ thể?
-[ ] Bước đầu không phụ thuộc vào bước nào chưa có?
-[ ] Không có bước nào span quá 1 buổi code (~2-3h)?
-[ ] Bước lớn nhất có thể tách nhỏ hơn không?
-[ ] Nếu bước 3 fail → bước 4 vẫn có thể bắt đầu không? (nếu không, ghi rõ dependency)
+- [ ] 1. Implement password reset logic   ← too broad, no idea what "done" means
+- [ ] 2. Make sure it works              ← not verifiable
 ```
 
-Nếu có bước nào fail check → tách hoặc rewrite bước đó trước khi lưu.
+### Step 5 — Check plan quality
+
+Before saving:
+
+```
+[ ] Does each step have a specific "Done when:"?
+[ ] Does the first step not depend on anything that doesn't exist yet?
+[ ] Does no step span more than one coding session (~2-3h)?
+[ ] Can the largest step be broken down further?
+[ ] If step 3 fails → can step 4 still start? (if not, note the dependency explicitly)
+```
+
+If any step fails a check → break it up or rewrite it before saving.
 
 ---
 
-## Sau khi plan xong
+## After the plan is done
 
-Confirm với user: hiển thị plan vừa viết, hỏi "Bắt đầu từ bước 1?" hoặc "Có bước nào cần điều chỉnh không?"
+Confirm with user: display the plan just written, ask "Start from step 1?" or "Are there any steps that need adjustment?"
 
-Không tự động bắt đầu code — plan chưa được user approve thì chưa implement.
+Do not start coding automatically — do not implement until the user has approved the plan.
 
 ---
 
 ## Gotchas
 
-**Brownfield: đọc code hiện tại trước khi plan.** Plan dựa trên giả định về code cũ sẽ sai. Dùng grep/read để xác nhận tên hàm, interface, và pattern hiện tại trước khi ghi vào plan.
+**Brownfield: read the existing code before planning.** Plans based on assumptions about old code will be wrong. Use grep/read to confirm function names, interfaces, and current patterns before writing them into the plan.
 
-**Tránh "mega step" cuối.** "Integration + testing + polish" gom vào 1 bước cuối là dấu hiệu plan chưa đủ chi tiết. Tách ra.
+**Avoid a "mega step" at the end.** "Integration + testing + polish" lumped into one final step is a sign the plan is not detailed enough. Break it up.
 
-**Đừng plan quá xa.** Nếu spec có Open questions chưa giải quyết → plan chỉ đến trước điểm cần quyết định đó, ghi chú rõ "⚠️ cần confirm X trước khi tiếp."
+**Don't plan too far ahead.** If the spec has unresolved Open questions → plan only up to the point before that decision is needed, and note clearly "⚠️ need to confirm X before continuing."

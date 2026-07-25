@@ -5,74 +5,74 @@ description: Decide whether to ask before coding or proceed with stated assumpti
 
 # Clarify Scope
 
-Trước khi bắt đầu task, áp dụng decision tree sau.
+Before starting a task, apply the following decision tree.
 
 ---
 
 ## Decision tree
 
-### Task nhỏ, rõ ràng → làm luôn
+### Small, clear task → do it immediately
 
-Dấu hiệu:
-- Biết chính xác file nào cần touch
-- Goal không thể hiểu theo nhiều cách
-- Scope không vượt ra ngoài 1 module
+Signals:
+- Know exactly which files need to be touched
+- Goal cannot be interpreted in multiple ways
+- Scope does not extend beyond 1 module
 
-Hành động: **không hỏi, làm ngay.**
+Action: **do not ask, proceed immediately.**
 
 ---
 
-### Task lớn hoặc mơ hồ → nêu giả định + hỏi tối đa 1 câu
+### Large or ambiguous task → state assumptions + ask at most 1 question
 
-Dấu hiệu của task lớn/mơ hồ:
-- Goal có thể hiểu theo nhiều cách
-- Chạm > 1 module hoặc > 1 layer
-- Không rõ tiêu chí "xong"
-- Có thể ảnh hưởng đến behavior hiện tại
+Signals of a large/ambiguous task:
+- Goal can be interpreted in multiple ways
+- Touches > 1 module or > 1 layer
+- Success criteria are unclear
+- May affect existing behavior
 
-**Format phản hồi:**
+**Response format:**
 
 ```
-Giả định:
-- [điều tôi assume về scope/hướng giải quyết]
-- [điều tôi assume về constraint]
+Assumptions:
+- [what I assume about the scope/approach]
+- [what I assume about constraints]
 - ...
 
-→ Tiến hành theo hướng này. Sửa tôi nếu có gì sai.
+→ Proceeding with this approach. Correct me if anything is wrong.
 ```
 
-Nếu có **1 điều** mà nếu sai sẽ đi sai hướng hoàn toàn — hỏi điều đó, không hỏi thêm gì khác.
+If there is **1 thing** that, if wrong, would send the work in a completely wrong direction — ask that one thing, nothing else.
 
 ---
 
-## Câu hỏi "đáng hỏi" vs "không đáng hỏi"
+## "Worth asking" vs "not worth asking"
 
-**Đáng hỏi** (sai thì đi ngược hướng):
-- "Đây là endpoint mới hay sửa endpoint cũ?"
-- "Feature này dành cho tất cả user hay chỉ admin?"
-- "Cần backward-compatible không hay được phép breaking change?"
+**Worth asking** (if wrong, heads in the opposite direction):
+- "Is this a new endpoint or modifying an existing one?"
+- "Is this feature for all users or only admins?"
+- "Does this need to be backward-compatible or is a breaking change allowed?"
 
-**Không đáng hỏi** (sai chỉ tốn công sửa nhỏ):
-- "Đặt tên biến thế nào?"
-- "Error message hiển thị gì?"
-- "Nên dùng `const` hay `let`?"
+**Not worth asking** (if wrong, only requires a small fix):
+- "What should the variable be named?"
+- "What should the error message say?"
+- "Should I use `const` or `let`?"
 
 ---
 
-## Ví dụ
+## Examples
 
-**Task:** "Fix bug login không redirect đúng"
-→ Nhỏ, rõ → làm luôn, không hỏi.
+**Task:** "Fix bug where login doesn't redirect correctly"
+→ Small, clear → do it immediately, no questions.
 
-**Task:** "Refactor hệ thống auth"
-→ Lớn, mơ hồ. Phản hồi:
+**Task:** "Refactor the auth system"
+→ Large, ambiguous. Response:
 ```
-Giả định:
-- Giữ nguyên API surface hiện tại (backward-compatible)
-- Chỉ refactor internal logic, không thay đổi schema DB
-- Scope: src/auth/ và các file gọi vào đó
+Assumptions:
+- Keep the existing API surface (backward-compatible)
+- Only refactor internal logic, no DB schema changes
+- Scope: src/auth/ and files that call into it
 
-→ Tiến hành theo hướng này. Sửa tôi nếu có gì sai.
+→ Proceeding with this approach. Correct me if anything is wrong.
 
-Câu hỏi duy nhất: có session nào đang active trên production cần migrate không, hay được phép invalidate toàn bộ?
+Single question: are there any active sessions on production that need to be migrated, or is it acceptable to invalidate all of them?
 ```

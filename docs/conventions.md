@@ -1,5 +1,5 @@
 # Conventions
 
-Xem `.ai/context/conventions.md` — đó là source of truth.
+See `.ai/context/conventions.md` — that is the source of truth.
 
-Thư mục `docs/` dành cho human-facing documentation. AI agents đọc từ `.ai/`.
+The `docs/` directory is for human-facing documentation. AI agents read from `.ai/`.

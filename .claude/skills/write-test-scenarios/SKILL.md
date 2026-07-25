@@ -5,65 +5,65 @@ description: Generate manual test scenarios (UC/TC) from the spec file after imp
 
 # Write Test Scenarios
 
-Tạo tài liệu test thủ công (UC + TC) dựa trên spec đã viết, để người dùng tự kiểm tra feature sau khi implement xong.
+Generate manual test documentation (UC + TC) based on the written spec, so the user can verify the feature by hand after implementation is complete.
 
-**Output:** file `.ai/tasks/<tên-task>-manual-tests.md`
+**Output:** file `.ai/tasks/<task-name>-manual-tests.md`
 
 ---
 
 ## Run
 
-### Bước 1 — Đọc đầu vào
+### Step 1 — Read inputs
 
 ```
-Đọc: .ai/tasks/<tên-task>.md    ← lấy Goal + Test plan + Constraints
-Đọc: .ai/context/domain-glossary.md  ← dùng đúng thuật ngữ nghiệp vụ
+Read: .ai/tasks/<task-name>.md    ← get Goal + Test plan + Constraints
+Read: .ai/context/domain-glossary.md  ← use correct domain terminology
 ```
 
-Liệt kê tất cả item trong `## Test plan` — đây là danh sách UC cần viết.
+List all items in `## Test plan` — this is the list of UCs to write.
 
-### Bước 2 — Xác định Use Cases
+### Step 2 — Identify Use Cases
 
-Nhóm test plan items thành các UC theo flow người dùng. Một UC = một hành trình người dùng có đầu có cuối.
+Group test plan items into UCs by user flow. One UC = one user journey with a clear start and end.
 
-Ví dụ:
+Example:
 ```
 Test plan items:
-- happy path: reset password thành công
-- edge case: token hết hạn
-- edge case: token dùng lại
-- không làm hỏng: login vẫn hoạt động bình thường
+- happy path: password reset succeeds
+- edge case: token expired
+- edge case: token reused
+- no regression: login still works normally
 
-→ UC-01: Reset password thành công
-→ UC-02: Xử lý token không hợp lệ
-→ UC-03: Flow login không bị ảnh hưởng (regression)
+→ UC-01: Successful password reset
+→ UC-02: Handle invalid token
+→ UC-03: Login flow unaffected (regression)
 ```
 
-### Bước 3 — Viết file test
+### Step 3 — Write test file
 
-Tạo `.ai/tasks/<tên-task>-manual-tests.md` theo format sau:
+Create `.ai/tasks/<task-name>-manual-tests.md` using the following format:
 
 ```markdown
-# Manual Tests: <tên-task>
+# Manual Tests: <task-name>
 
-**Feature:** <mô tả ngắn từ Goal của spec>
+**Feature:** <short description from spec Goal>
 **Tester:** ___________
-**Ngày test:** ___________
-**Môi trường:** ___________   (staging / local / production)
+**Test date:** ___________
+**Environment:** ___________   (staging / local / production)
 
 ---
 
-## UC-01: <tên use case>
+## UC-01: <use case name>
 
-> <1-2 câu mô tả use case — ai làm gì, mục đích là gì>
+> <1-2 sentence description of the use case — who does what, and why>
 
 **Preconditions:**
-- <điều kiện trước khi bắt đầu test>
+- <condition that must be true before starting the test>
 - ...
 
 ---
 
-### TC-01-01: <tên test case cụ thể>
+### TC-01-01: <specific test case name>
 
 | | |
 |---|---|
@@ -71,12 +71,12 @@ Tạo `.ai/tasks/<tên-task>-manual-tests.md` theo format sau:
 | **Type** | Happy path / Edge case / Regression / Error handling |
 
 **Steps:**
-1. <bước cụ thể — đủ chi tiết để người không biết code làm được>
+1. <specific step — detailed enough for someone without code knowledge to follow>
 2. ...
 3. ...
 
 **Expected result:**
-- <điều gì phải xảy ra — cụ thể, quan sát được>
+- <what must happen — specific and observable>
 - ...
 
 **Actual result:** ___________
@@ -87,7 +87,7 @@ Tạo `.ai/tasks/<tên-task>-manual-tests.md` theo format sau:
 
 ---
 
-### TC-01-02: <test case tiếp theo trong cùng UC>
+### TC-01-02: <next test case in the same UC>
 ...
 
 ---
@@ -95,67 +95,67 @@ Tạo `.ai/tasks/<tên-task>-manual-tests.md` theo format sau:
 ## UC-02: ...
 ```
 
-### Bước 4 — Quy tắc viết TC tốt
+### Step 4 — Rules for writing good TCs
 
-**Steps phải đủ cụ thể để người không biết code làm được:**
+**Steps must be specific enough for someone without code knowledge to follow:**
 ```
-# Tốt
-1. Mở trình duyệt, truy cập http://localhost:3000/forgot-password
-2. Nhập email "test@example.com" vào ô "Email"
-3. Nhấn nút "Gửi link đặt lại mật khẩu"
-4. Kiểm tra hộp thư của test@example.com
+# Good
+1. Open browser, navigate to http://localhost:3000/forgot-password
+2. Enter "test@example.com" in the "Email" field
+3. Click the "Send password reset link" button
+4. Check the inbox of test@example.com
 
-# Tệ
-1. Gọi API reset password
-2. Kiểm tra kết quả
-```
-
-**Expected result phải quan sát được:**
-```
-# Tốt
-- Trang hiển thị thông báo "Đã gửi email. Vui lòng kiểm tra hộp thư."
-- Email đến trong vòng 60 giây với subject "Đặt lại mật khẩu"
-- Link trong email có dạng https://.../reset?token=...
-
-# Tệ
-- Hệ thống xử lý đúng
-- Không có lỗi
+# Bad
+1. Call the reset password API
+2. Check the result
 ```
 
-**Preconditions phải rõ ràng:**
-- Dữ liệu nào cần có sẵn (user account, order, ...)
-- Trạng thái hệ thống cần thiết (email server chạy, feature flag bật, ...)
-- Người test cần quyền gì
+**Expected result must be observable:**
+```
+# Good
+- Page shows message "Email sent. Please check your inbox."
+- Email arrives within 60 seconds with subject "Reset your password"
+- Link in email matches the format https://.../reset?token=...
 
-### Bước 5 — Đảm bảo coverage
+# Bad
+- System processes correctly
+- No errors
+```
 
-Kiểm tra mỗi item trong `## Test plan` của spec đã có ít nhất 1 TC:
+**Preconditions must be clear:**
+- What data must exist (user account, order, ...)
+- Required system state (email server running, feature flag enabled, ...)
+- What permissions the tester needs
+
+### Step 5 — Ensure coverage
+
+Verify each item in `## Test plan` of the spec has at least 1 TC:
 
 ```
 [ ] happy path → TC-XX-XX
 [ ] edge case 1 → TC-XX-XX
-[ ] không làm hỏng → TC-XX-XX (regression)
+[ ] no regression → TC-XX-XX (regression)
 ```
 
-Nếu có item trong Test plan chưa có TC → thêm vào trước khi lưu.
+If any Test plan item has no TC → add it before saving.
 
-### Bước 6 — Báo cáo
+### Step 6 — Report
 
-Sau khi tạo xong file, báo cáo:
+After creating the file, report:
 ```
-Đã tạo: .ai/tasks/<tên-task>-manual-tests.md
+Created: .ai/tasks/<task-name>-manual-tests.md
 - X use cases
 - Y test cases (Z high priority)
 ```
 
 ---
 
-## Format nhanh cho từng loại TC
+## Quick format guide by TC type
 
-**Happy path:** Actor chính, điều kiện bình thường, flow thẳng từ đầu đến cuối.
+**Happy path:** Primary actor, normal conditions, straight-through flow from start to finish.
 
-**Edge case:** Input biên (rỗng, quá dài, ký tự đặc biệt), trạng thái bất thường (hết hạn, đã dùng, trùng lặp), concurrent action.
+**Edge case:** Boundary inputs (empty, too long, special characters), abnormal states (expired, already used, duplicate), concurrent actions.
 
-**Error handling:** Hệ thống phản hồi đúng khi có lỗi — message rõ ràng, không crash, không lộ thông tin nhạy cảm.
+**Error handling:** System responds correctly when an error occurs — clear message, no crash, no sensitive information leaked.
 
-**Regression:** Flow cũ không liên quan trực tiếp đến feature mới — phải verify vẫn hoạt động bình thường.
+**Regression:** Existing flows not directly related to the new feature — must verify they still work normally.

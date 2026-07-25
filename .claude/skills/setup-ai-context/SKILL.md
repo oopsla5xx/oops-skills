@@ -5,80 +5,80 @@ description: Bootstrap .ai/ context files — auto-detect stack and fill command
 
 # Setup AI Context
 
-Tự động điền 3 file template trong `.ai/` bằng cách probe project thay vì điền tay.
+Automatically fill in the 3 template files in `.ai/` by probing the project instead of filling them in manually.
 
-**Không viết placeholder, không đoán.** Chỉ điền những gì tìm thấy được trong project.
+**Do not write placeholders, do not guess.** Only fill in what can be found in the project.
 
 ---
 
 ## Run
 
-### Bước 1 — Chạy detection script
+### Step 1 — Run the detection script
 
 ```bash
 bash .claude/skills/setup-ai-context/detect.sh
 ```
 
-Đọc toàn bộ output trước khi làm bước tiếp theo.
+Read the entire output before proceeding to the next step.
 
-### Bước 2 — Điền `.ai/commands.md`
+### Step 2 — Fill in `.ai/commands.md`
 
-Dựa vào section `SCRIPTS` trong output:
+Based on the `SCRIPTS` section in the output:
 
-- Tìm lệnh `test`: ưu tiên script tên `test`, `test:ci`, hoặc lệnh gọi test framework trực tiếp
-- Tìm lệnh `build`: script tên `build`, `compile`, hoặc tương đương
-- Tìm lệnh `lint`: script tên `lint`, `check`, hoặc gọi eslint/ruff/clippy trực tiếp
-- Tìm lệnh `typecheck`: script tên `typecheck`, `type-check`, `tsc`
-- Tìm lệnh `dev`: script tên `dev`, `start`, `serve`
-- Tìm lệnh `deploy`: script tên `deploy`, hoặc Makefile target liên quan
+- Find the `test` command: prioritize scripts named `test`, `test:ci`, or direct test framework invocations
+- Find the `build` command: scripts named `build`, `compile`, or equivalent
+- Find the `lint` command: scripts named `lint`, `check`, or direct eslint/ruff/clippy calls
+- Find the `typecheck` command: scripts named `typecheck`, `type-check`, `tsc`
+- Find the `dev` command: scripts named `dev`, `start`, `serve`
+- Find the `deploy` command: scripts named `deploy`, or related Makefile targets
 
-Với mỗi lệnh: nếu tìm thấy → ghi lệnh thật vào file. Nếu không có → xóa section đó (đừng để placeholder).
+For each command: if found → write the actual command to the file. If not present → remove that section (do not leave placeholders).
 
-### Bước 3 — Điền `.ai/context/architecture.md`
+### Step 3 — Fill in `.ai/context/architecture.md`
 
-Dùng section `README EXCERPT` và `TOP-LEVEL STRUCTURE`:
+Use the `README EXCERPT` and `TOP-LEVEL STRUCTURE` sections:
 
-**Project là gì**: lấy từ đầu README (thường là dòng đầu tiên sau title).
+**What the project is**: taken from the beginning of the README (usually the first line after the title).
 
-**Stack**: từ section `STACK`, `FRAMEWORKS`, `DATABASE SIGNALS`.
+**Stack**: from the `STACK`, `FRAMEWORKS`, `DATABASE SIGNALS` sections.
 
-**Cấu trúc module**: từ `TOP-LEVEL STRUCTURE` — mô tả 3-5 thư mục quan trọng nhất, bỏ qua `node_modules`, `dist`, `.git`, v.v.
+**Module structure**: from `TOP-LEVEL STRUCTURE` — describe the 3-5 most important directories, skip `node_modules`, `dist`, `.git`, etc.
 
-**Luồng dữ liệu**: nếu README có mô tả flow → ghi lại. Nếu không → để mục này với comment `<!-- TODO: mô tả luồng request/event chính -->` và báo cho user.
+**Data flow**: if the README describes a flow → write it down. If not → leave this section with the comment `<!-- TODO: describe the main request/event flow -->` and notify the user.
 
-**Ranh giới giữa module** và **External dependencies**: nếu README không đề cập → để TODO và báo user.
+**Module boundaries** and **External dependencies**: if the README does not mention them → leave as TODO and notify the user.
 
-### Bước 4 — Điền `.ai/context/conventions.md`
+### Step 4 — Fill in `.ai/context/conventions.md`
 
-Dùng section `LINTING / FORMATTING CONFIG`:
+Use the `LINTING / FORMATTING CONFIG` section:
 
-- Có `biome.json` → ghi: "Formatter và linter: Biome. Chạy `biome check --apply`"
-- Có `.eslintrc*` + `.prettierrc*` → ghi: "Lint: ESLint. Format: Prettier."
-- Có `ruff.toml` → ghi: "Lint + format: Ruff."
-- Có `.rubocop.yml` → ghi: "Lint: RuboCop."
-- Có `.editorconfig` → đọc file đó, extract indent_style và indent_size
+- Has `biome.json` → write: "Formatter and linter: Biome. Run `biome check --apply`"
+- Has `.eslintrc*` + `.prettierrc*` → write: "Lint: ESLint. Format: Prettier."
+- Has `ruff.toml` → write: "Lint + format: Ruff."
+- Has `.rubocop.yml` → write: "Lint: RuboCop."
+- Has `.editorconfig` → read that file, extract indent_style and indent_size
 
-Tạo một rule skeleton cho `Error Handling` dựa trên stack (xem Gotchas bên dưới).
-Các section `Naming`, `Data Access`, `Testing` → để trống với comment `<!-- TODO -->` và báo user cần điền.
+Create an `Error Handling` rule skeleton based on the stack (see Gotchas below).
+The `Naming`, `Data Access`, `Testing` sections → leave empty with `<!-- TODO -->` comment and notify the user they need to fill these in.
 
-### Bước 5 — Báo cáo kết quả
+### Step 5 — Report results
 
-In ra:
-- Những gì đã điền được (với lệnh/giá trị cụ thể)
-- Những TODO còn lại mà agent không thể tự điền (luồng dữ liệu, business logic, naming conventions)
+Print:
+- What was successfully filled in (with specific commands/values)
+- Remaining TODOs that the agent cannot fill in automatically (data flow, business logic, naming conventions)
 
 ---
 
 ## Gotchas
 
-**`node` không available:** Script dùng `node -e` để parse JSON. Nếu project là non-Node và không có node → script sẽ skip các section đó. Không sao, output vẫn có ích từ các section khác.
+**`node` not available:** The script uses `node -e` to parse JSON. If the project is non-Node and node is not available → the script will skip those sections. That is fine; the output is still useful from other sections.
 
-**Monorepo:** `detect.sh` chạy từ root sẽ thấy quá nhiều. Nếu `TOP-LEVEL STRUCTURE` có `apps/`, `packages/`, `services/` → hỏi user muốn setup `.ai/` cho sub-project nào, rồi chạy lại từ thư mục đó.
+**Monorepo:** Running `detect.sh` from the root will surface too much. If `TOP-LEVEL STRUCTURE` contains `apps/`, `packages/`, `services/` → ask the user which sub-project they want to set up `.ai/` for, then re-run from that directory.
 
-**README nghèo thông tin:** Nhiều project có README chỉ vài dòng. Khi đó `architecture.md` sẽ có nhiều TODO — đây là expected behavior, không phải lỗi.
+**Sparse README:** Many projects have READMEs with only a few lines. In that case `architecture.md` will have many TODOs — this is expected behavior, not an error.
 
-**Error Handling rule theo stack:**
-- Node.js/TS → ví dụ với `try/catch` và typed errors
-- Python → ví dụ với `except Exception as e` và logging
-- Rust → ví dụ với `Result<T, E>` và `?` operator
-- Go → ví dụ với `if err != nil`
+**Error Handling rule by stack:**
+- Node.js/TS → example with `try/catch` and typed errors
+- Python → example with `except Exception as e` and logging
+- Rust → example with `Result<T, E>` and `?` operator
+- Go → example with `if err != nil`

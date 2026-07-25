@@ -5,79 +5,79 @@ description: Refresh stale .ai/ context files before starting a task — detect 
 
 # Sync AI Context
 
-Kiểm tra và cập nhật các file `.ai/` bị lỗi thời trước khi bắt đầu task. Chỉ patch phần bị stale — không rewrite toàn bộ file.
+Check and update stale `.ai/` files before starting a task. Only patch the stale parts — do not rewrite the entire file.
 
-Dùng khi: bắt đầu task mới, sau khi pull từ remote, hoặc khi nghi ngờ context không còn chính xác.
+Use when: starting a new task, after pulling from remote, or when the context is suspected to be inaccurate.
 
 ---
 
 ## Run
 
-### Bước 1 — Phát hiện file stale
+### Step 1 — Detect stale files
 
 ```bash
 bash .claude/skills/sync-ai-context/check-staleness.sh
 ```
 
-Đọc toàn bộ output. Script có 3 loại kết quả:
-- `OK` — file này còn mới, bỏ qua
-- `STALE <source> is newer than <target>` — cần cập nhật phần liên quan
-- `MISSING` — file chưa tồn tại, chạy `/setup-ai-context` trước
+Read the entire output. The script produces 3 types of results:
+- `OK` — this file is still fresh, skip it
+- `STALE <source> is newer than <target>` — the relevant section needs updating
+- `MISSING` — file does not exist yet, run `/setup-ai-context` first
 
-### Bước 2 — Xử lý từng STALE signal
+### Step 2 — Handle each STALE signal
 
-**Nếu `package.json` newer than `commands.md`:**
+**If `package.json` is newer than `commands.md`:**
 ```bash
 node -e "const d=require('./package.json'); Object.entries(d.scripts||{}).forEach(([k,v])=>console.log(k+': '+v))"
 ```
-So sánh output với `.ai/commands.md`. Cập nhật chỉ những section có lệnh khác — không xóa section nào nếu không chắc đã bị xóa khỏi project.
+Compare the output with `.ai/commands.md`. Update only the sections with different commands — do not remove any section unless you are certain it has been removed from the project.
 
-**Nếu `Makefile` newer than `commands.md`:**
+**If `Makefile` is newer than `commands.md`:**
 ```bash
 grep -E "^[a-zA-Z_-]+:" Makefile | sed 's/:.*//'
 ```
-Thêm hoặc sửa target tương ứng trong `commands.md`.
+Add or update the corresponding targets in `commands.md`.
 
-**Nếu `README.md` newer than `architecture.md`:**
+**If `README.md` is newer than `architecture.md`:**
 ```bash
 head -60 README.md
 ```
-Đọc phần thay đổi. Cập nhật đúng section bị ảnh hưởng (thường là "Project là gì" hoặc "Stack").
+Read the changed parts. Update only the affected section (usually "What the project is" or "Stack").
 
-**Nếu có new directory không có trong `architecture.md`:**
-Đọc nội dung thư mục đó (`ls <dir>`). Thêm 1-2 dòng mô tả vào section "Cấu trúc module" — không mô tả nếu không rõ mục đích.
+**If there is a new directory not present in `architecture.md`:**
+Read the contents of that directory (`ls <dir>`). Add 1-2 lines of description to the "Module structure" section — do not describe it if the purpose is unclear.
 
-**Nếu lint config (`.eslintrc*`, `biome.json`, `ruff.toml`...) newer than `conventions.md`:**
+**If a lint config (`.eslintrc*`, `biome.json`, `ruff.toml`...) is newer than `conventions.md`:**
 ```bash
 cat <config-file>
 ```
-Cập nhật đúng rule liên quan trong `conventions.md`. Không xóa rule cũ trừ khi config mới rõ ràng mâu thuẫn.
+Update the relevant rule in `conventions.md`. Do not remove old rules unless the new config clearly contradicts them.
 
-### Bước 3 — Cập nhật timestamp ngầm
+### Step 3 — Implicitly update timestamps
 
-Sau khi sửa xong file nào đó: touch file đó để reset baseline của lần check tiếp theo.
+After updating a file: touch that file to reset the baseline for the next check.
 
 ```bash
-touch .ai/commands.md          # chỉ file nào vừa cập nhật
+touch .ai/commands.md          # only files that were just updated
 touch .ai/context/architecture.md
 touch .ai/context/conventions.md
 ```
 
-### Bước 4 — Báo cáo
+### Step 4 — Report
 
-In ra:
-- File nào đã cập nhật và sửa section gì
-- File nào `OK` (không cần động vào)
-- Có STALE signal nào agent không đủ thông tin để tự xử lý — cần hỏi user
+Print:
+- Which files were updated and which sections were changed
+- Which files were `OK` (no action needed)
+- Any STALE signals the agent does not have enough information to handle — needs to ask the user
 
 ---
 
 ## Gotchas
 
-**Script exit code 1 không phải lỗi:** Exit 1 chỉ có nghĩa là có file stale. Exit 0 = tất cả fresh. Đừng treat exit 1 là failure.
+**Script exit code 1 is not an error:** Exit 1 only means there are stale files. Exit 0 = everything is fresh. Do not treat exit 1 as a failure.
 
-**`find -newer` dùng filesystem mtime:** Nếu project vừa được `git clone`, mọi file đều có mtime = thời điểm clone — script sẽ báo nhiều STALE giả. Trong trường hợp này, dùng section "RECENT GIT CHANGES" để phán đoán thay vì file timestamps.
+**`find -newer` uses filesystem mtime:** If the project was just `git clone`d, all files will have mtime = the clone time — the script will report many false STALEs. In this case, use the "RECENT GIT CHANGES" section to make judgments instead of relying on file timestamps.
 
-**Không cập nhật khi không chắc:** Nếu STALE signal là `package.json` mới hơn nhưng chỉ có field `version` thay đổi → bỏ qua, `commands.md` không cần sửa. Ưu tiên không sai hơn không cập nhật.
+**Do not update when unsure:** If a STALE signal is `package.json` newer but only the `version` field changed → skip it, `commands.md` does not need updating. Prefer not being wrong over not updating.
 
-**Monorepo:** Script phát hiện thư mục mới ở depth 1-2. Nếu project là monorepo với nhiều `apps/`, chỉ quan tâm thư mục bên trong sub-project đang làm việc.
+**Monorepo:** The script detects new directories at depth 1-2. If the project is a monorepo with many `apps/`, only care about directories inside the sub-project being worked on.
