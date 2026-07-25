@@ -53,8 +53,7 @@ Use the description prepared by `/create-pr-description`.
 
 ```bash
 # Find the task name from the spec file in .ai/tasks/
-ls .ai/tasks/*.md | grep -v TEMPLATE
-```
+ls .ai/tasks/*.md | grep -v TEMPLATE | grep -v -- '-manual-tests\.md$'
 
 After confirming the PR was created successfully:
 
