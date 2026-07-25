@@ -4,7 +4,7 @@
 
 ## Why
 
-<!-- Reason this change is needed. Link to spec if available: .ai/tasks/<name>.md -->
+<!-- Reason this change is needed. Link to spec if available: .ai/tasks/<task-name>.md -->
 
 ## Changes
 
