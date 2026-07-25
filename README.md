@@ -4,7 +4,7 @@ Starter template for AI workflow — works with Claude Code, Cursor, GitHub Copi
 
 ## Usage
 
-Copy the entire directory into the root of your project, then fill in the `<!-- TODO -->` files.
+Copy the entire directory into the root of your project, then fill in the `<!-- TODO -->` placeholders in the template files.
 
 ```
 cp -r oops-skills/. your-project/
