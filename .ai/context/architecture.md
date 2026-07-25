@@ -1,21 +1,21 @@
 # Architecture
 
-<!-- TODO: điền thông tin của project vào đây -->
+<!-- TODO: fill in the project information here -->
 
-## Project là gì
+## What this project is
 
-<!-- 2-3 câu: mục đích, người dùng cuối là ai, problem nó giải quyết -->
+<!-- 2-3 sentences: purpose, who the end users are, what problem it solves -->
 
 ## Stack
 
-- Language/Framework: <!-- vd: TypeScript, Next.js 14 -->
-- Database: <!-- vd: PostgreSQL 15, Redis -->
-- Infra: <!-- vd: AWS ECS, Vercel -->
-- Key dependencies: <!-- chỉ liệt kê những thứ quan trọng về mặt kiến trúc -->
+- Language/Framework: <!-- e.g.: TypeScript, Next.js 14 -->
+- Database: <!-- e.g.: PostgreSQL 15, Redis -->
+- Infra: <!-- e.g.: AWS ECS, Vercel -->
+- Key dependencies: <!-- list only architecturally significant ones -->
 
-## Cấu trúc module
+## Module structure
 
-<!-- Giải thích các thư mục/module chính, mỗi cái làm gì -->
+<!-- Explain the main directories/modules, what each one does -->
 
 ```
 src/
@@ -24,14 +24,14 @@ src/
 └── ...
 ```
 
-## Luồng dữ liệu chính
+## Main data flows
 
-<!-- Mô tả 1-2 luồng quan trọng nhất, ví dụ: request lifecycle, event flow -->
+<!-- Describe 1-2 of the most important flows, e.g.: request lifecycle, event flow -->
 
-## Ranh giới giữa các module
+## Module boundaries
 
-<!-- Module nào KHÔNG được gọi trực tiếp vào module nào? Tại sao? -->
+<!-- Which module is NOT allowed to call directly into which other module? Why? -->
 
 ## External dependencies
 
-<!-- API bên ngoài, third-party services quan trọng, và cách chúng được tích hợp -->
+<!-- External APIs, important third-party services, and how they are integrated -->

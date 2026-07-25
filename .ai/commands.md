@@ -1,9 +1,9 @@
 # Commands
 
-Mọi agent đọc file này để biết lệnh cụ thể của project. Không đoán, không hardcode.
+Every agent reads this file to know the specific commands for this project. Do not guess, do not hardcode.
 
 ## test
-<!-- TODO: thay bằng lệnh chạy test của project -->
+<!-- TODO: replace with the project's test command -->
 Run: `npm test`
 
 ## test:watch
@@ -22,7 +22,7 @@ Run: `npm run lint`
 Run: `npm run typecheck`
 
 ## dev
-<!-- TODO: lệnh khởi động môi trường local -->
+<!-- TODO: command to start the local environment -->
 Run: `npm run dev`
 
 ## deploy:staging
@@ -34,4 +34,4 @@ Run: `./scripts/deploy.sh staging`
 Run: `./scripts/deploy.sh prod`
 
 ---
-<!-- Thêm lệnh project-specific bên dưới theo cùng format -->
+<!-- Add project-specific commands below using the same format -->

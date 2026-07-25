@@ -1,4 +1,4 @@
-# ADR-0001: Dùng PostgreSQL làm primary database
+# ADR-0001: Use PostgreSQL as the primary database
 
 **Status:** Accepted  
 **Date:** 2025-01-15
@@ -7,33 +7,33 @@
 
 ## Context
 
-Project cần lưu trữ dữ liệu có quan hệ phức tạp (user, order, product). Có hai lựa chọn chính: PostgreSQL và MongoDB. Team quen với SQL hơn NoSQL.
+The project needs to store data with complex relationships (user, order, product). There are two main options: PostgreSQL and MongoDB. The team is more familiar with SQL than NoSQL.
 
 ## Decision
 
-Dùng PostgreSQL 15.
+Use PostgreSQL 15.
 
 ## Reasons
 
-- Dữ liệu có schema cố định và quan hệ rõ ràng — relational model phù hợp hơn document model
-- Team đã có kinh nghiệm với SQL, learning curve thấp
-- JSONB support đủ linh hoạt cho các field bán cấu trúc nếu cần
+- Data has a fixed schema and clear relationships — the relational model fits better than the document model
+- The team already has experience with SQL, low learning curve
+- JSONB support is flexible enough for semi-structured fields if needed
 
 ## Tradeoffs
 
-- Horizontal scaling khó hơn MongoDB — chấp nhận được vì traffic hiện tại không yêu cầu
-- Schema migration cần cẩn thận hơn — đã có quy trình review migration trước khi deploy
+- Horizontal scaling is harder than MongoDB — acceptable because current traffic does not require it
+- Schema migration requires more care — a migration review process before deployment is already in place
 
 ## Consequences
 
-- Mọi thay đổi schema phải qua migration file, không được sửa trực tiếp
-- Query phức tạp dùng raw SQL thay vì ORM để tránh N+1
+- All schema changes must go through a migration file, no direct edits allowed
+- Complex queries use raw SQL instead of ORM to avoid N+1
 
 ---
 
-<!-- Format cho ADR mới:
-     - Tên file: NNNN-slug-mô-tả.md (số tăng dần)
+<!-- Format for new ADRs:
+     - File name: NNNN-slug-description.md (incrementing number)
      - Status: Proposed | Accepted | Deprecated | Superseded by ADR-XXXX
-     - Giữ ngắn: context + decision + reasons là đủ
-     - Ghi rõ tradeoffs đã chấp nhận — đây là phần quan trọng nhất
+     - Keep it short: context + decision + reasons is enough
+     - Clearly state accepted tradeoffs — this is the most important part
 -->

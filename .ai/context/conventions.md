@@ -1,13 +1,13 @@
 # Conventions
 
-<!-- Mỗi rule: tên rõ ràng, ví dụ ❌ (sai) và ✅ (đúng), lý do ngắn -->
-<!-- Xóa các section không liên quan đến project của bạn -->
+<!-- Each rule: clear name, ❌ (wrong) and ✅ (correct) examples, short rationale -->
+<!-- Remove sections not relevant to your project -->
 
 ---
 
 ## Error Handling
 
-### Rule: Không nuốt lỗi âm thầm
+### Rule: Do not silently swallow errors
 
 ❌
 ```typescript
@@ -24,33 +24,33 @@ try {
   await doSomething()
 } catch (e) {
   logger.error('doSomething failed', { error: e, context: ... })
-  throw e // hoặc handle cụ thể
+  throw e // or handle specifically
 }
 ```
 
-**Lý do:** Lỗi bị nuốt làm mất trace, debug rất khó về sau.
+**Rationale:** Swallowed errors lose the trace, making debugging very difficult later.
 
 ---
 
 ## Naming
 
-### Rule: <!-- TODO: thêm rule naming của project -->
+### Rule: <!-- TODO: add the project's naming rule -->
 
 ❌
 ```
-// ví dụ sai
+// wrong example
 ```
 
 ✅
 ```
-// ví dụ đúng
+// correct example
 ```
 
 ---
 
 ## Data Access
 
-### Rule: <!-- TODO: thêm rule về cách access database/store -->
+### Rule: <!-- TODO: add rule for how to access database/store -->
 
 ---
 
@@ -62,8 +62,8 @@ try {
 
 ## Testing
 
-### Rule: <!-- TODO: unit test hay integration test? mock ở đâu, không mock ở đâu? -->
+### Rule: <!-- TODO: unit test or integration test? where to mock, where not to mock? -->
 
 ---
 
-<!-- Thêm nhóm rule mới theo cùng format -->
+<!-- Add new rule groups using the same format -->

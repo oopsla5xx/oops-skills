@@ -5,145 +5,145 @@ description: Review PR diff against the spec before shipping — check spec comp
 
 # Review PR
 
-Review diff của PR dựa trên spec đã viết. Không phải generic "code review" — mà là kiểm tra code có đúng với những gì đã cam kết trong spec không.
+Review the PR diff against the written spec. This is not a generic "code review" — it checks whether the code matches what was committed to in the spec.
 
 ---
 
 ## Run
 
-### Bước 1 — Đọc context
+### Step 1 — Read context
 
 ```bash
-# Xem toàn bộ diff đang chuẩn bị ship
-git diff main...HEAD    # hoặc git diff <base-branch>...HEAD
+# View the full diff about to be shipped
+git diff main...HEAD    # or git diff <base-branch>...HEAD
 ```
 
-Cùng lúc đọc:
-- `.ai/tasks/<tên-task>.md` — spec (Goal, Scope, Out of scope, Constraints, Plan)
-- `.ai/context/conventions.md` — quy tắc code của project
+Also read:
+- `.ai/tasks/<task-name>.md` — spec (Goal, Scope, Out of scope, Constraints, Plan)
+- `.ai/context/conventions.md` — project code conventions
 
-### Bước 2 — Review theo 5 chiều
+### Step 2 — Review across 5 dimensions
 
-Đánh giá từng chiều, ghi findings theo format `[BLOCKING]` hoặc `[MINOR]`:
+Evaluate each dimension, record findings using `[BLOCKING]` or `[MINOR]` format:
 
 ---
 
 **A. Spec compliance**
 
-- [ ] Code đạt được Goal trong spec chưa?
-- [ ] Có thay đổi nào nằm ngoài `## Scope` không?
-- [ ] Có thay đổi nào vi phạm `## Out of scope` không?
-- [ ] Các `## Constraints` được tôn trọng không?
-- [ ] Tất cả bước trong `## Plan` đã được implement chưa?
+- [ ] Does the code achieve the Goal in the spec?
+- [ ] Are there any changes outside `## Scope`?
+- [ ] Are there any changes that violate `## Out of scope`?
+- [ ] Are the `## Constraints` respected?
+- [ ] Have all steps in `## Plan` been implemented?
 
-`[BLOCKING]`: bất kỳ item nào trong Out of scope bị vi phạm, hoặc Goal không đạt.
-`[MINOR]`: thiếu 1 step nhỏ trong Plan nhưng không ảnh hưởng Goal.
+`[BLOCKING]`: any Out of scope item violated, or Goal not achieved.
+`[MINOR]`: a small step in Plan is missing but does not affect the Goal.
 
 ---
 
 **B. Conventions**
 
-So sánh từng thay đổi với `.ai/context/conventions.md`:
+Compare each change against `.ai/context/conventions.md`:
 
-- [ ] Error handling đúng pattern chưa? (không nuốt lỗi âm thầm)
-- [ ] Naming đúng convention không?
-- [ ] Không có hardcoded value nào không?
-- [ ] Không có code nào copy-paste gây duplicate logic?
+- [ ] Is error handling following the correct pattern? (no silent error swallowing)
+- [ ] Does naming follow the convention?
+- [ ] Are there any hardcoded values?
+- [ ] Is there any copy-pasted code causing duplicate logic?
 
-`[BLOCKING]`: vi phạm convention cứng (ví dụ: nuốt lỗi trong production path).
-`[MINOR]`: naming hơi khác style, có thể fix sau.
+`[BLOCKING]`: violation of a hard convention (e.g., swallowing errors in a production path).
+`[MINOR]`: naming slightly off style, can be fixed later.
 
 ---
 
 **C. Scope creep**
 
 ```bash
-# Kiểm tra file nào bị touch ngoài scope đã định
+# Check which files were touched outside the defined scope
 git diff --name-only main...HEAD
 ```
 
-So sánh danh sách file thay đổi với `## Scope` trong spec.
+Compare the list of changed files against `## Scope` in the spec.
 
-- [ ] Có file nào bị sửa không được đề cập trong Scope không?
-- [ ] Nếu có — thay đổi đó có justified không? (bugfix phát sinh, refactor bắt buộc)
+- [ ] Are there any files modified that are not mentioned in Scope?
+- [ ] If so — is that change justified? (incidental bugfix, required refactor)
 
-`[BLOCKING]`: thay đổi không liên quan làm tăng risk không cần thiết.
-`[MINOR]`: cleanup nhỏ trong file liên quan.
+`[BLOCKING]`: unrelated change that increases risk unnecessarily.
+`[MINOR]`: small cleanup in a related file.
 
 ---
 
 **D. Test coverage**
 
-- [ ] Mỗi item trong `## Test plan` của spec có test tương ứng không?
-- [ ] Test cover happy path?
-- [ ] Test cover ít nhất 1 edge case?
-- [ ] Không có test nào bị xóa mà không có lý do rõ ràng?
+- [ ] Does each item in `## Test plan` of the spec have a corresponding test?
+- [ ] Do tests cover the happy path?
+- [ ] Do tests cover at least 1 edge case?
+- [ ] Were any tests deleted without a clear reason?
 
 ```bash
-# Xem test files thay đổi
+# View changed test files
 git diff --name-only main...HEAD | grep -E "test|spec"
 ```
 
-`[BLOCKING]`: happy path hoàn toàn không có test.
-`[MINOR]`: thiếu một số edge case nhỏ.
+`[BLOCKING]`: happy path has no tests at all.
+`[MINOR]`: some minor edge cases missing.
 
 ---
 
 **E. Security basics** (stack-agnostic)
 
-- [ ] Input từ user/external được validate trước khi dùng không?
-- [ ] Không có secret/credential nào bị hardcode không?
-- [ ] Không có SQL string concatenation nào không? (dùng parameterized query)
-- [ ] Không có output nào expose stack trace hoặc internal error detail ra user không?
-- [ ] Nếu có file upload — có validate type/size không?
+- [ ] Is user/external input validated before use?
+- [ ] Are there any hardcoded secrets/credentials?
+- [ ] Is there any SQL string concatenation? (use parameterized queries)
+- [ ] Does any output expose a stack trace or internal error details to users?
+- [ ] If there is file upload — is type/size validated?
 
-`[BLOCKING]`: bất kỳ issue security nào trong list trên.
+`[BLOCKING]`: any security issue from the list above.
 
 ---
 
-### Bước 3 — Tổng hợp verdict
+### Step 3 — Summarize verdict
 
-**Format output:**
+**Output format:**
 
 ```markdown
-## PR Review: <tên-task>
+## PR Review: <task-name>
 
 **Verdict:** ✅ APPROVE | 🔄 REQUEST CHANGES | 💬 COMMENT ONLY
 
 ---
 
-### Blocking issues (phải fix trước khi merge)
-<!-- Chỉ có nếu verdict là REQUEST CHANGES -->
-- [BLOCKING] <chiều> — <mô tả cụ thể> | <file:line nếu có>
+### Blocking issues (must fix before merging)
+<!-- Only present if verdict is REQUEST CHANGES -->
+- [BLOCKING] <dimension> — <specific description> | <file:line if available>
 
-### Minor issues (có thể fix trong PR tiếp)
-- [MINOR] <chiều> — <mô tả>
+### Minor issues (can fix in a follow-up PR)
+- [MINOR] <dimension> — <description>
 
 ### Notes
-<!-- Quan sát không phải issue, hoặc ghi nhận điểm tốt -->
+<!-- Observations that are not issues, or positive highlights -->
 -
 
 ---
-Spec: `.ai/tasks/<tên-task>.md`
-Diff: <số files thay đổi> files, +<dòng thêm>/-<dòng xóa>
+Spec: `.ai/tasks/<task-name>.md`
+Diff: <number of changed files> files, +<lines added>/-<lines removed>
 ```
 
-**Nguyên tắc verdict:**
-- `✅ APPROVE` — không có blocking issue
-- `🔄 REQUEST CHANGES` — có ≥1 blocking issue, phải fix trước khi merge
-- `💬 COMMENT ONLY` — không có blocking nhưng có điều đáng ghi nhận
+**Verdict rules:**
+- `✅ APPROVE` — no blocking issues
+- `🔄 REQUEST CHANGES` — ≥1 blocking issue, must fix before merging
+- `💬 COMMENT ONLY` — no blocking issues but something worth noting
 
-### Bước 4 — Nếu có blocking issue
+### Step 4 — If there are blocking issues
 
-Không tự sửa. Report rõ ràng, để agent/người implement quyết định:
-- Sửa trong PR hiện tại → re-run review sau khi fix
-- Tạo follow-up task cho minor issue → note vào `.ai/tasks/` hoặc tạo issue
+Do not fix them yourself. Report clearly, let the agent/implementer decide:
+- Fix in the current PR → re-run review after fixing
+- Create a follow-up task for minor issues → note in `.ai/tasks/` or create an issue
 
 ---
 
-## Những gì KHÔNG review ở đây
+## What is NOT reviewed here
 
-- Style preference không có trong conventions.md → không flag
-- Architectural opinion nằm ngoài scope task → không flag (đó là việc của ADR)
-- Performance chưa là vấn đề được đo → không flag
-- Test coverage % tuyệt đối → chỉ xem xét test plan items, không đòi 100%
+- Style preferences not in conventions.md → do not flag
+- Architectural opinions outside the task scope → do not flag (that is ADR work)
+- Performance that has not been measured as a problem → do not flag
+- Absolute test coverage % → only check test plan items, do not require 100%

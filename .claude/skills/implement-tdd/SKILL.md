@@ -5,130 +5,130 @@ description: Implement each step from the plan using TDD — write failing test 
 
 # Implement TDD
 
-Implement từng bước trong `## Plan` của spec file theo chu trình TDD.
+Implement each step in the `## Plan` of the spec file following the TDD cycle.
 
-**Quy tắc cứng:** Không viết implementation trước khi có failing test. Không exception.
+**Hard rule:** Do not write implementation before having a failing test. No exceptions.
 
 ---
 
 ## Setup
 
-Trước bước đầu tiên, chạy full test suite để confirm baseline xanh:
+Before the first step, run the full test suite to confirm the baseline is green:
 
 ```bash
-# Lấy lệnh từ .ai/commands.md
+# Get the command from .ai/commands.md
 <test-command>
 ```
 
-Nếu baseline đỏ → dừng, report với user, không implement trên nền đỏ.
+If the baseline is red → stop, report to user, do not implement on a red baseline.
 
 ---
 
-## Chu trình cho mỗi bước trong Plan
+## Cycle for each step in the Plan
 
-Lấy bước tiếp theo chưa tick `- [ ]` từ `## Plan` trong spec file. Thực hiện:
+Take the next unchecked `- [ ]` step from `## Plan` in the spec file. Execute:
 
-### 🔴 Red — Viết test trước
+### 🔴 Red — Write the test first
 
-1. Đọc "Done khi:" của bước để biết test cần assert gì
-2. Viết test — chỉ test behavior của bước này, không nhiều hơn
-3. Chạy test: **phải đỏ**
+1. Read the step's "Done when:" to know what the test needs to assert
+2. Write the test — only test the behavior of this step, nothing more
+3. Run the test: **it must be red**
 
-**Test đỏ đúng nghĩa:**
+**Correctly red test:**
 ```
-FAIL: expected X but got undefined   ← đúng, function chưa tồn tại
-FAIL: expected true but got false    ← đúng, logic chưa implement
-```
-
-**Test đỏ sai nghĩa (phải fix trước khi tiếp):**
-```
-SyntaxError / TypeError              ← test bị lỗi cú pháp
-Cannot find module                   ← import sai path
-Expected 2 arguments but got 1      ← test tự viết sai
+FAIL: expected X but got undefined   ← correct, function doesn't exist yet
+FAIL: expected true but got false    ← correct, logic not yet implemented
 ```
 
-Nếu test đỏ vì lý do sai → sửa test, không viết implementation.
+**Incorrectly red test (must fix before continuing):**
+```
+SyntaxError / TypeError              ← test has a syntax error
+Cannot find module                   ← wrong import path
+Expected 2 arguments but got 1      ← test itself is written incorrectly
+```
 
-### 🟢 Green — Code tối giản để pass
+If the test is red for the wrong reason → fix the test, do not write implementation.
 
-4. Viết implementation nhỏ nhất có thể làm test xanh
-5. Chạy test: **phải xanh**
-6. Chạy full suite: **không được thêm đỏ mới**
+### 🟢 Green — Minimal code to pass
 
-**"Tối giản" có nghĩa là:**
-- Không thêm logic cho case chưa có test
-- Không thêm abstraction chưa cần thiết
-- Không refactor code liên quan ngoài scope bước này
+4. Write the smallest implementation that can make the test green
+5. Run the test: **it must be green**
+6. Run full suite: **must not introduce any new red**
 
-Nếu full suite bị đỏ mới → tìm regression, fix trước khi tiếp.
+**"Minimal" means:**
+- Do not add logic for cases that don't have a test yet
+- Do not add abstractions that aren't needed yet
+- Do not refactor related code outside the scope of this step
 
-### 🔵 Refactor — Dọn khi đang xanh
+If the full suite has new red → find the regression, fix it before continuing.
 
-7. Chỉ refactor nếu code vừa viết có vấn đề rõ ràng: tên xấu, duplicate logic, magic number
-8. Sau mỗi thay đổi refactor → chạy test lại
-9. Nếu test đỏ khi refactor → revert ngay, không để nợ
+### 🔵 Refactor — Clean up while green
 
-**Không refactor trong bước này:**
-- Code của bước khác trong plan
-- Code không liên quan đến bước đang làm
-- "Cải thiện" mang tính phòng xa (YAGNI)
+7. Only refactor if the code just written has clear issues: bad names, duplicate logic, magic numbers
+8. After each refactor change → run tests again
+9. If tests go red during refactor → revert immediately, don't carry the debt
 
-### ✅ Tick và commit
+**Do not refactor in this step:**
+- Code belonging to other steps in the plan
+- Code unrelated to the current step
+- "Improvements" that are speculative (YAGNI)
 
-10. Đánh dấu bước xong trong spec file:
+### ✅ Tick and commit
+
+10. Mark the step as done in the spec file:
     ```
     - [x] 1. Create `src/auth/reset-token.ts` ...
     ```
-11. Commit với message rõ:
+11. Commit with a clear message:
     ```
-    test: <bước vừa làm>
-    feat: <bước vừa làm>
+    test: <step just completed>
+    feat: <step just completed>
     ```
-    Hoặc gom lại nếu nhỏ:
+    Or combine if small:
     ```
-    feat: <bước vừa làm> (with tests)
+    feat: <step just completed> (with tests)
     ```
 
-Sau đó lấy bước tiếp theo và lặp lại.
+Then take the next step and repeat.
 
 ---
 
-## Các case đặc biệt
+## Special cases
 
-**Bước là migration DB:**
-Test không theo Red/Green thông thường. Thay vào đó:
-1. Viết migration
-2. Chạy migration lên: `<migrate-command>`
-3. Verify schema đúng (query hoặc inspect)
-4. Chạy rollback: `<rollback-command>`
-5. Chạy lại migration → confirm idempotent
-Done khi: cả hai chiều đều chạy sạch.
+**Step is a DB migration:**
+Tests don't follow the normal Red/Green cycle. Instead:
+1. Write the migration
+2. Run the migration up: `<migrate-command>`
+3. Verify schema is correct (query or inspect)
+4. Run rollback: `<rollback-command>`
+5. Run migration again → confirm idempotent
+Done when: both directions run cleanly.
 
-**Bước là UI component:**
-Nếu project có component test (Storybook, Testing Library) → dùng. Nếu không:
-1. Viết test render đơn giản (snapshot hoặc "renders without crash")
-2. Implement component
-3. Nếu có thể — test interaction (click, input)
-Không bỏ qua test hoàn toàn cho UI — test render tối thiểu vẫn có giá trị.
+**Step is a UI component:**
+If the project has component tests (Storybook, Testing Library) → use them. If not:
+1. Write a simple render test (snapshot or "renders without crash")
+2. Implement the component
+3. If possible — test interaction (click, input)
+Do not skip tests entirely for UI — a minimal render test still has value.
 
-**Bước là wiring/integration:**
-Test ở tầng integration, không unit. Mock external service (email, payment) nếu cần. Không mock internal code của chính mình.
+**Step is wiring/integration:**
+Test at the integration layer, not unit. Mock external services (email, payment) if needed. Do not mock your own internal code.
 
-**Bước có Open question `[BLOCKING]`:**
-Dừng lại, hỏi user, không tự assume. Không implement bước có blocking question.
-
----
-
-## Dừng và báo cáo khi
-
-- Full suite đỏ sau khi implement và không biết nguyên nhân → report ngay, không implement tiếp
-- Scope phình ra so với spec → dừng, cập nhật spec/plan, confirm với user
-- Phát hiện ra plan có thứ tự sai (bước N cần code của bước N+2) → báo cáo, không tự reorder
+**Step has an Open question `[BLOCKING]`:**
+Stop, ask the user, do not assume. Do not implement a step with a blocking question.
 
 ---
 
-## Sau khi tất cả các bước xong
+## Stop and report when
 
-1. Chạy full suite lần cuối
-2. Chạy lint và typecheck (lấy lệnh từ `.ai/commands.md`)
-3. Chuyển sang `/self-check` (Phase 3 của task-flow)
+- Full suite is red after implementation and the cause is unknown → report immediately, do not continue implementing
+- Scope has expanded beyond the spec → stop, update spec/plan, confirm with user
+- You discover the plan has the wrong order (step N needs code from step N+2) → report it, do not reorder on your own
+
+---
+
+## After all steps are done
+
+1. Run the full suite one final time
+2. Run lint and typecheck (get commands from `.ai/commands.md`)
+3. Move on to `/self-check` (Phase 3 of task-flow)

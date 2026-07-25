@@ -1,62 +1,59 @@
 # Task Flow
 
-Mọi task đều đi qua 4 phase này. Không skip phase, không merge khi chưa xong self-check.
+Every task goes through these 4 phases. Do not skip phases, do not merge until the self-check is complete.
 
 ---
 
 ## Phase 1 — Brief
 
-**Trước khi viết một dòng code:**
+**Before writing a single line of code:**
 
-1. Chạy `/clarify-scope` — quyết định hỏi hay giả định và tiến hành
-2. Chạy `/write-spec` — chuyển context thảo luận thành file `.ai/tasks/<tên-task>.md`
-3. Chạy `/plan-tasks` — chia spec thành bước implement có thứ tự, append `## Plan` vào spec file
+1. Run `/clarify-scope` — decide whether to ask or assume and proceed
+2. Run `/write-spec` — convert the discussion context into a file at `.ai/tasks/<task-name>.md`
+3. Run `/plan-tasks` — break the spec into ordered implementation steps, append `## Plan` to the spec file
 
-Nếu task nhỏ, rõ ràng (clarify-scope đánh giá "làm luôn") → bỏ qua write-spec và plan-tasks, tiến thẳng sang Phase 2.
+If the task is small and clear (clarify-scope rates it "just do it") → skip write-spec and plan-tasks, go directly to Phase 2.
 
 ---
 
 ## Phase 2 — Implement
 
-Chạy `/implement-tdd` — lặp chu trình Red → Green → Refactor cho từng bước trong `## Plan`.
+Run `/implement-tdd` — iterate the Red → Green → Refactor cycle for each step in `## Plan`.
 
-Nếu task nhỏ (không có spec/plan): đọc `.ai/context/conventions.md`, confirm baseline test xanh, rồi code trực tiếp.
+If the task is small (no spec/plan): read `.ai/context/conventions.md`, confirm the baseline tests are green, then code directly.
 
-**Không bao giờ:**
-- Viết implementation trước khi có failing test (nếu đang dùng TDD)
-- Refactor code ngoài scope bước đang làm
-- Sửa test để pass thay vì sửa code
-- Thêm dependency mới mà không ghi vào `.ai/decisions/`
+**Never:**
+- Write implementation before having a failing test (when using TDD)
+- Refactor code outside the scope of the current step
+- Fix tests to pass instead of fixing the code
+- Add a new dependency without recording it in `.ai/decisions/`
 
 ---
 
 ## Phase 3 — Self-check
 
-1. Chạy `/write-test-scenarios` — tạo file UC/TC tại `.ai/tasks/<tên-task>-manual-tests.md` để user test thủ công
+1. Run `/write-test-scenarios` — create a UC/TC file at `.ai/tasks/<task-name>-manual-tests.md` for manual user testing
 
-2. **Tự kiểm tra trước khi tuyên bố "done":**
+2. **Self-review before declaring "done":**
 
 ```
-[ ] test: toàn bộ test suite xanh
-[ ] lint: không có lỗi mới
-[ ] typecheck: không có lỗi mới (nếu project có)
-[ ] conventions: re-read thay đổi, không có vi phạm
-[ ] scope: không có code ngoài phạm vi brief
-[ ] side effects: không có thay đổi ngoài ý muốn ở file khác
-[ ] docs: nếu thay đổi ảnh hưởng docs → đã cập nhật
-[ ] manual-tests: file UC/TC đã tạo và cover toàn bộ Test plan
+[ ] test: entire test suite is green
+[ ] lint: no new errors
+[ ] typecheck: no new errors (if project has it)
+[ ] conventions: re-read changes, no violations
+[ ] scope: no code outside the brief's scope
+[ ] side effects: no unintended changes in other files
+[ ] docs: if changes affect docs → already updated
+[ ] manual-tests: UC/TC file created and covers the entire Test plan
 ```
 
-Chỉ khi tất cả check xanh mới chuyển sang Phase 4.
+Only when all checks pass, move to Phase 4.
 
 ---
 
 ## Phase 4 — Ship
 
-1. Chạy `/review-pr` — verdict phải là ✅ APPROVE trước khi tiếp tục
-2. Chạy `/create-pr-description` — điền template từ `.github/PULL_REQUEST_TEMPLATE.md`
-3. Nếu có quyết định kỹ thuật đáng ghi lại → tạo file trong `.ai/decisions/`
-4. Cập nhật `.ai/status.md`:
-   - Xóa task khỏi "In Progress"
-   - Thêm vào "Recently Completed" với notes ngắn
-5. Xóa file `.ai/tasks/<tên-task>.md` và `<tên-task>-manual-tests.md`
+1. Run `/review-pr` — verdict must be ✅ APPROVE before proceeding
+2. Run `/create-pr-description` — fill in the template from `.github/PULL_REQUEST_TEMPLATE.md`
+3. If there is a technical decision worth recording → create a file in `.ai/decisions/`
+4. Run `/ship` — push branch, create the actual PR, clean up task files

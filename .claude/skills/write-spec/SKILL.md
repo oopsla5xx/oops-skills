@@ -5,81 +5,81 @@ description: Convert clarify-scope discussion into a structured spec file at .ai
 
 # Write Spec
 
-Chuyển context đã thảo luận (assumptions, câu hỏi đã giải quyết, scope đã xác định) thành file spec có cấu trúc tại `.ai/tasks/<tên-task>.md`.
+Convert the discussed context (assumptions, resolved questions, confirmed scope) into a structured spec file at `.ai/tasks/<task-name>.md`.
 
-Chạy ngay sau khi `clarify-scope` đã xong — đừng để context trôi mất trong lịch sử chat.
+Run immediately after `clarify-scope` completes — don't let context drift away in chat history.
 
 ---
 
 ## Run
 
-### Bước 1 — Đặt tên task
+### Step 1 — Name the task
 
-Tên phải: ngắn, dùng kebab-case, mô tả hành động cụ thể.
+The name must be: short, kebab-case, describing a specific action.
 
 ```
-# Tốt
+# Good
 add-password-reset
 refactor-auth-middleware
 fix-order-status-race-condition
 
-# Không tốt
-feature          ← quá chung
-fix-bug          ← không biết bug gì
-update-stuff     ← vô nghĩa
+# Bad
+feature          ← too generic
+fix-bug          ← doesn't say what bug
+update-stuff     ← meaningless
 ```
 
-### Bước 2 — Điền từng section từ context cuộc thảo luận
+### Step 2 — Fill each section from the discussion context
 
-Mở `.ai/tasks/TEMPLATE.md` làm tham chiếu, tạo file mới `.ai/tasks/<tên-task>.md`.
+Open `.ai/tasks/TEMPLATE.md` as reference, create a new file `.ai/tasks/<task-name>.md`.
 
-**Goal** — lấy từ mục tiêu đã thảo luận. Phải đáp ứng cả hai:
-- Specific: biết chính xác phải làm gì
-- Measurable: biết khi nào thì "xong"
+**Goal** — taken from the discussed objective. Must satisfy both:
+- Specific: know exactly what needs to be done
+- Measurable: know when it's "done"
 
-Ví dụ tệ: "Cải thiện hệ thống auth"
-Ví dụ tốt: "User có thể reset password qua email, nhận link trong 60s, link hết hạn sau 1h"
+Bad example: "Improve the auth system"
+Good example: "User can reset password via email, receives link within 60s, link expires after 1h"
 
-**Scope** — liệt kê file/module cụ thể từ assumptions đã confirm:
+**Scope** — list specific files/modules from confirmed assumptions:
 ```
-- src/auth/password-reset.ts (tạo mới)
-- src/api/routes/auth.ts (thêm endpoint)
-- src/email/templates/ (thêm template)
-```
-
-**Out of scope** — lấy từ những gì đã nói KHÔNG làm, hoặc tự suy ra từ scope boundary. Đây là phần quan trọng nhất để tránh scope creep sau này.
-
-**Test plan** — tối thiểu 3 case:
-- Happy path (flow chính hoạt động đúng)
-- Edge case (input biên, concurrent request...)
-- Không làm hỏng gì đang hoạt động (regression)
-
-**Constraints** — từ câu hỏi critical đã được trả lời trong clarify-scope. Nếu user đã nói "backward-compatible" hay "không được invalidate session cũ" → ghi vào đây.
-
-**Open questions** — nếu vẫn còn câu hỏi chưa giải quyết sau clarify-scope, ghi vào đây với tag `[BLOCKING]` nếu cần trả lời trước khi code.
-
-### Bước 3 — Kiểm tra chất lượng spec
-
-Trước khi lưu, tự hỏi:
-
-```
-[ ] Goal: đọc xong biết ngay "xong" trông như thế nào không?
-[ ] Out of scope: nếu ai đó muốn thêm X vào scope, có thể từ chối bằng file này không?
-[ ] Test plan: có ít nhất 1 case "không làm hỏng cái đang chạy" không?
-[ ] Constraints: câu hỏi critical từ clarify-scope đã được capture chưa?
+- src/auth/password-reset.ts (create new)
+- src/api/routes/auth.ts (add endpoint)
+- src/email/templates/ (add template)
 ```
 
-Nếu bất kỳ checkbox nào là NO → sửa trước khi lưu.
+**Out of scope** — taken from what was explicitly said NOT to do, or inferred from scope boundaries. This is the most important section for preventing scope creep later.
 
-### Bước 4 — Cập nhật status
+**Test plan** — minimum 3 cases:
+- Happy path (main flow works correctly)
+- Edge case (boundary input, concurrent request...)
+- Does not break anything currently working (regression)
 
-Sau khi tạo spec:
-1. Cập nhật `.ai/status.md` — thêm task vào "In Progress" với ngày bắt đầu
-2. Confirm với user: "Spec đã tạo tại `.ai/tasks/<tên-task>.md`. Tiến hành implement?"
+**Constraints** — from critical questions answered in clarify-scope. If the user said "backward-compatible" or "must not invalidate existing sessions" → record it here.
+
+**Open questions** — if any questions remain unresolved after clarify-scope, record them here with a `[BLOCKING]` tag if they must be answered before coding.
+
+### Step 3 — Check spec quality
+
+Before saving, ask yourself:
+
+```
+[ ] Goal: after reading it, do you immediately know what "done" looks like?
+[ ] Out of scope: if someone wants to add X to scope, can you reject it using this file?
+[ ] Test plan: is there at least 1 case for "does not break what's currently working"?
+[ ] Constraints: have the critical questions from clarify-scope been captured?
+```
+
+If any checkbox is NO → fix before saving.
+
+### Step 4 — Update status
+
+After creating the spec:
+1. Update `.ai/status.md` — add the task to "In Progress" with the start date
+2. Confirm with user: "Spec created at `.ai/tasks/<task-name>.md`. Proceed with implementation?"
 
 ---
 
-## Khi nào KHÔNG chạy skill này
+## When NOT to run this skill
 
-- Task nhỏ, rõ ràng (theo đánh giá của clarify-scope) → không cần spec, làm luôn
-- Spec đã tồn tại trong `.ai/tasks/` → cập nhật file đó thay vì tạo mới
+- Task is small and clear (as assessed by clarify-scope) → no spec needed, proceed directly
+- Spec already exists in `.ai/tasks/` → update that file instead of creating a new one

@@ -1,18 +1,18 @@
 # CLAUDE.md
-<!-- Claude Code adapter — trỏ vào .ai/ làm source of truth -->
+<!-- Claude Code adapter — points to .ai/ as source of truth -->
 
 @.ai/workflows/onboarding.md
 @.ai/workflows/task-flow.md
 @.ai/commands.md
 
-## Khi bắt đầu session mới
-Follow `.ai/workflows/onboarding.md` — đọc theo thứ tự, không skip.
+## When starting a new session
+Follow `.ai/workflows/onboarding.md` — read in order, do not skip.
 
-## Khi được giao task
-Follow `.ai/workflows/task-flow.md` — không merge khi chưa xong self-check.
+## When assigned a task
+Follow `.ai/workflows/task-flow.md` — do not merge until self-check is complete.
 
-## TUYỆT ĐỐI KHÔNG
-<!-- TODO: thêm constraint cứng của project vào đây -->
-- Không sửa file migrations đã chạy production
-- Không push lên branch main
-- Không thêm dependency mới mà không ghi vào `.ai/decisions/`
+## NEVER
+<!-- TODO: add hard constraints for this project here -->
+- Do not edit migration files that have already run in production
+- Do not push to the main branch
+- Do not add new dependencies without recording them in `.ai/decisions/`
