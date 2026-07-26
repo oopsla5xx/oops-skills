@@ -86,7 +86,8 @@ Phase 4 — Ship
 ├── write-test-scenarios/     # Create UC/TC markdown for manual testing
 ├── review-pr/                # Review diff against spec before shipping
 ├── create-pr-description/    # Fill PR template from spec + git history
-└── ship/                     # Push branch, open PR, update status, clean up
+├── ship/                     # Push branch, open PR, update status, clean up
+└── debug/                    # Systematic bug investigation: Reproduce → Reduce → Observe → Root Cause → Fix → Verify
 
 CLAUDE.md                     # Claude Code adapter (uses @ imports)
 .cursorrules                  # Cursor adapter
