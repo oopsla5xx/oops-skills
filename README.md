@@ -87,7 +87,7 @@ Phase 4 — Ship
 ├── review-pr/                # Review diff against spec before shipping
 ├── create-pr-description/    # Fill PR template from spec + git history
 ├── ship/                     # Push branch, open PR, update status, clean up
-└── debug/                    # Systematic bug investigation: Reproduce → Reduce → Observe → Root Cause → Fix → Verify
+└── debug/                    # Systematic bug investigation: Reproduce → Reduce → Observe → Hypothesize → Experiment → Root Cause → Fix → Verify
 
 CLAUDE.md                     # Claude Code adapter (uses @ imports)
 .cursorrules                  # Cursor adapter
