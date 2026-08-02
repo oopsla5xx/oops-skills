@@ -12,4 +12,4 @@ Use this checklist before moving to Ship and during `/review-pr`.
 [ ] dependency-risk: If new dependencies are added, vulnerability check has been completed
 ```
 
-If any item is not applicable, mark it as `N/A` with a short reason.
+If any item is not applicable, mark it as `N/A` *inline* with a short reason (e.g., `N/A file-handling: feature does not touch upload/download`). If an item is applicable and verified, mark it as `[x]`.
