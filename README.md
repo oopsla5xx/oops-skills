@@ -45,7 +45,7 @@ Phase 2 — Implement
 
 Phase 3 — Self-check
   /write-test-scenarios   Create UC/TC for user to manually test
-  [checklist]             tests green, lint, conventions, scope, side effects
+  [checklist]             tests green, lint, conventions, scope, side effects, security checklist
 
 Phase 4 — Ship
   /review-pr              Review diff against spec: 5 dimensions, verdict APPROVE/REQUEST CHANGES

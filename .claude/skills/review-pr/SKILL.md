@@ -1,6 +1,6 @@
 ---
 name: review-pr
-description: Review PR diff against the spec before shipping — check spec compliance, conventions, scope, security basics, and test coverage. Outputs a structured verdict (APPROVE / REQUEST CHANGES / COMMENT). Run after self-check, before Phase 4 ship.
+description: Review PR diff against the spec before shipping — check spec compliance, conventions, scope, required security checklist, and test coverage. Outputs a structured verdict (APPROVE / REQUEST CHANGES / COMMENT). Run after self-check, before Phase 4 ship.
 ---
 
 # Review PR
@@ -21,6 +21,7 @@ git diff main...HEAD    # or git diff <base-branch>...HEAD
 Also read:
 - `.ai/tasks/<task-name>.md` — spec (Goal, Scope, Out of scope, Constraints, Plan)
 - `.ai/context/conventions.md` — project code conventions
+- `.ai/context/security-checklist.md` — required security checks
 
 ### Step 2 — Review across 5 dimensions
 
@@ -89,15 +90,13 @@ git diff --name-only main...HEAD | grep -E "test|spec"
 
 ---
 
-**E. Security basics** (stack-agnostic)
+**E. Security checklist** (required)
 
-- [ ] Is user/external input validated before use?
-- [ ] Are there any hardcoded secrets/credentials?
-- [ ] Is there any SQL string concatenation? (use parameterized queries)
-- [ ] Does any output expose a stack trace or internal error details to users?
-- [ ] If there is file upload — is type/size validated?
+- [ ] Complete every item in `.ai/context/security-checklist.md` using `[x]` (including N/A items as `[x] <item>: N/A — <reason>`)
+- [ ] For each N/A item, is there a short reason?
+- [ ] Are there any unresolved findings from the checklist?
 
-`[BLOCKING]`: any security issue from the list above.
+`[BLOCKING]`: any unresolved finding, or any checklist item left blank (not completed with `[x]`, including N/A-with-reason entries).
 
 ---
 
