@@ -43,6 +43,7 @@ If the task is small (no spec/plan): read `.ai/context/conventions.md`, confirm 
 [ ] conventions: re-read changes, no violations
 [ ] scope: no code outside the brief's scope
 [ ] side effects: no unintended changes in other files
+[ ] security: `.ai/context/security-checklist.md` completed, no blocking findings
 [ ] docs: if changes affect docs → already updated
 [ ] manual-tests: UC/TC file created and covers the entire Test plan
 ```
