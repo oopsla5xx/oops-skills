@@ -96,7 +96,7 @@ git diff --name-only main...HEAD | grep -E "test|spec"
 - [ ] For each N/A item, is there a short reason?
 - [ ] Are there any unresolved findings from the checklist?
 
-`[BLOCKING]`: any unresolved finding or unchecked checklist item.
+`[BLOCKING]`: any unresolved finding, or any checklist item left blank (not completed with `[x]` and not marked `N/A` with a reason).
 
 ---
 
