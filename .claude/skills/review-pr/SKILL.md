@@ -92,11 +92,11 @@ git diff --name-only main...HEAD | grep -E "test|spec"
 
 **E. Security checklist** (required)
 
-- [ ] Complete every item in `.ai/context/security-checklist.md`
+- [ ] Complete every item in `.ai/context/security-checklist.md` using `[x]` (including N/A items as `[x] <item>: N/A — <reason>`)
 - [ ] For each N/A item, is there a short reason?
 - [ ] Are there any unresolved findings from the checklist?
 
-`[BLOCKING]`: any unresolved finding, or any checklist item left blank (not completed with `[x]` and not marked `N/A` with a reason).
+`[BLOCKING]`: any unresolved finding, or any checklist item left blank (not completed with `[x]`, including N/A-with-reason entries).
 
 ---
 
