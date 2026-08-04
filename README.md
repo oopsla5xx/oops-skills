@@ -1,125 +1,147 @@
 # oops-skills
 
-Starter template for AI workflow — works with Claude Code, Cursor, GitHub Copilot, and any AI coding tool that can read markdown.
+A polished starter kit for AI-assisted development workflows — designed to work with Claude Code, Cursor, GitHub Copilot, and any markdown-aware coding agent.
 
-## Usage
+It gives every tool the same source of truth, the same workflow, and the same project context.
 
-Copy the entire directory into the root of your project, then fill in the `<!-- TODO -->` placeholders in the template files.
+---
 
-```
+## Why this exists
+
+Most AI coding setups fail for the same reasons:
+
+- instructions live in too many places
+- commands are guessed instead of defined
+- workflows differ between tools
+- context gets stale fast
+
+`oops-skills` fixes that by keeping the important project knowledge in `.ai/` and letting every adapter point back to it.
+
+---
+
+## Quick start
+
+```bash
 cp -r oops-skills/. your-project/
 ```
 
-Then run `/setup-ai-context` to let the agent auto-detect the stack and fill in the 3 template files, or fill them in manually:
+Then run:
 
-1. `.ai/context/architecture.md` — system description
-2. `.ai/context/conventions.md` — coding rules
-3. `.ai/commands.md` — actual build/test/deploy commands for the project
+```text
+/setup-ai-context
+```
+
+That will auto-detect your stack and fill in the core `.ai/` files.
+
+If you prefer manual setup, edit these files:
+
+1. `.ai/context/architecture.md` — system overview and architecture
+2. `.ai/context/conventions.md` — coding rules with examples
+3. `.ai/commands.md` — actual build, test, lint, and deploy commands
 
 ---
 
-## Workflow
+## Everyday workflow
 
-### Setup (once)
+### 1) Set up once
 
-```
-/setup-ai-context   Detect stack, auto-fill .ai/ templates
-```
-
-### Each time you start working
-
-```
-/sync-ai-context    Check if .ai/ files are stale, patch if needed
+```text
+/setup-ai-context
 ```
 
-### Task flow
+### 2) Refresh context when you start work
 
+```text
+/sync-ai-context
 ```
+
+### 3) Follow the task flow
+
+```text
 Phase 1 — Brief
-  /clarify-scope          Small/clear → proceed. Large/vague → state assumptions + ask 1 question
+  /clarify-scope          Small/clear → proceed. Large/vague → ask 1 question + state assumptions
   /write-spec             Convert discussion context → .ai/tasks/<name>.md
-  /plan-tasks             Break spec into ordered steps + "Done when:" for each step
+  /plan-tasks             Turn the spec into ordered steps with “Done when:” criteria
 
 Phase 2 — Implement
-  /implement-tdd          Red → Green → Refactor, per step in Plan
+  /implement-tdd          Red → Green → Refactor for each planned step
 
 Phase 3 — Self-check
-  /write-test-scenarios   Create UC/TC for user to manually test
-  [checklist]             tests green, lint, conventions, scope, side effects, security checklist
+  /write-test-scenarios   Create UC/TC scenarios for manual validation
+  [checklist]             Tests green, lint clean, conventions followed, scope respected, security checked
 
 Phase 4 — Ship
-  /review-pr              Review diff against spec: 5 dimensions, verdict APPROVE/REQUEST CHANGES
-  /create-pr-description  Fill .github/PULL_REQUEST_TEMPLATE.md from spec + git history
-  /ship                   Push branch, open PR on GitHub, update status.md, clean up task files
+  /review-pr              Review diff against spec; approve or request changes
+  /create-pr-description  Fill the PR template from the spec + git history
+  /ship                   Push branch, open PR, update status, clean up task files
 ```
 
-**Exception path:** Small, clear task → `/clarify-scope` evaluates "proceed" → skip write-spec, plan-tasks → code directly → self-check → ship.
+**Small, clear task?** If `/clarify-scope` says “proceed”, you can skip spec and planning and go straight to implementation, then self-check and ship.
 
 ---
 
-## Structure
+## What’s inside
 
-```
-.ai/                          # Source of truth — all agents read from here
-├── commands.md               # Abstract commands → concrete shell commands
-├── status.md                 # Multi-agent coordination: who is doing what
+```text
+.ai/                          # Single source of truth for all agents
+├── commands.md               # Abstract commands → project-specific shell commands
+├── status.md                 # Shared coordination state for multi-agent work
 ├── context/
-│   ├── architecture.md       # System overview, data flow
+│   ├── architecture.md       # System overview and data flow
 │   ├── conventions.md        # Coding rules with ❌/✅ examples
-│   └── domain-glossary.md    # Business/domain terminology
+│   └── domain-glossary.md    # Project and business terminology
 ├── workflows/
 │   ├── onboarding.md         # What a new agent reads, in what order
 │   └── task-flow.md          # Brief → Implement → Self-check → Ship
 ├── tasks/
-│   ├── TEMPLATE.md           # Template for task brief
-│   └── <name>.md             # Active task brief (delete after merge)
-└── decisions/                # ADR — important technical decisions
-    └── 0001-example-...md
+│   ├── TEMPLATE.md           # Template for task briefs
+│   └── <name>.md             # Active task brief, removed after merge
+└── decisions/                # ADRs for important technical decisions
 
-.claude/skills/               # Skills — only usable with Claude Code
-├── setup-ai-context/         # First-time setup: detect stack, fill templates
-├── sync-ai-context/          # Ongoing: check if .ai/ files are stale
-├── clarify-scope/            # Decide whether to ask or assume before coding
-├── write-spec/               # Convert discussion → .ai/tasks/<name>.md
-├── plan-tasks/               # Break spec into ordered implementation steps
-├── implement-tdd/            # Red → Green → Refactor per step in Plan
-├── write-test-scenarios/     # Create UC/TC markdown for manual testing
-├── review-pr/                # Review diff against spec before shipping
-├── create-pr-description/    # Fill PR template from spec + git history
-├── ship/                     # Push branch, open PR, update status, clean up
-└── debug/                    # Systematic bug investigation: Reproduce → Reduce → Observe → Hypothesize → Experiment → Root Cause → Fix → Verify
+.claude/skills/               # Claude Code skills wired to .ai/
+├── setup-ai-context/
+├── sync-ai-context/
+├── clarify-scope/
+├── write-spec/
+├── plan-tasks/
+├── implement-tdd/
+├── write-test-scenarios/
+├── review-pr/
+├── create-pr-description/
+├── ship/
+└── debug/
 
-CLAUDE.md                     # Claude Code adapter (uses @ imports)
+CLAUDE.md                     # Claude Code adapter
 .cursorrules                  # Cursor adapter
 .github/
 ├── copilot-instructions.md   # GitHub Copilot adapter
-└── PULL_REQUEST_TEMPLATE.md  # PR template (used by create-pr-description)
+└── PULL_REQUEST_TEMPLATE.md  # PR template used during shipping
 ```
 
 ---
 
-## Design Principles
+## Design principles
 
-**1. `.ai/` is the single source of truth.**
-All tool-specific configs are just adapters pointing to `.ai/`. When updating a convention or workflow, only one place needs to change.
+### 1. `.ai/` is the source of truth
+All tool-specific configs are just adapters. Update the workflow once, and every tool benefits.
 
-**2. Commands are abstract, not hardcoded.**
-Agents read `.ai/commands.md` to know the actual commands — no guessing `npm test` or `pytest`. Allows changing the stack without modifying the workflow.
+### 2. Commands are explicit
+No guessing `npm test`, `pytest`, or `make build`. The project defines its real commands in `.ai/commands.md`.
 
-**3. Workflow in plain markdown.**
-`task-flow.md` and skills are step-by-step instructions — any agent can follow them, no plugins or custom DSL required.
+### 3. Workflow stays readable
+The workflow is plain markdown, so any agent can follow it without custom plugins or hidden logic.
 
-**4. Spec is the origin of everything.**
-Spec (`write-spec`) → Plan (`plan-tasks`) → Implementation (`implement-tdd`) → Test scenarios (`write-test-scenarios`) → Review (`review-pr`) → PR description (`create-pr-description`) all trace back to the same `.ai/tasks/<name>.md` file.
+### 4. Specs drive everything
+Spec → Plan → Implementation → Test scenarios → Review → PR description → Ship.
 
-**5. Coordination via files.**
-`status.md` is shared state for multi-agent: agents check before starting, update when done. No server or special tooling required.
+### 5. Coordination stays in files
+`status.md` acts as shared state so multiple agents can work without special infrastructure.
 
 ---
 
-## Adding a New Tool
+## Adding a new tool
 
-Create an adapter file for that tool, pointing to `.ai/`:
+Create an adapter for that tool and point it back to `.ai/`:
 
 ```markdown
 # [Tool Name] Config
@@ -133,3 +155,11 @@ See `.ai/commands.md`
 ## Task workflow
 Follow `.ai/workflows/task-flow.md`
 ```
+
+---
+
+## Want to customize it?
+
+Update the files in `.ai/` and the adapters will stay aligned automatically.
+
+If you want, I can also make the README more visually branded with badges, a prettier table, and a stronger marketing-style intro.
