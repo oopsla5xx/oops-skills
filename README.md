@@ -1,7 +1,7 @@
 # oops-skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-production-brightgreen.svg)]()
+![Status](https://img.shields.io/badge/status-production-brightgreen.svg)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > A structured starter kit for AI-assisted development — giving every tool the same source of truth, the same workflow, and the same project context.
