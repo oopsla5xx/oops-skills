@@ -1,7 +1,7 @@
 # oops-skills
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-production-brightgreen.svg)]()
+![Status](https://img.shields.io/badge/status-production-brightgreen.svg)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > Starter kit có cấu trúc cho phát triển hỗ trợ bởi AI — cho mọi công cụ cùng một nguồn chân thật, cùng một quy trình, và cùng một ngữ cảnh dự án.
