@@ -1,165 +1,174 @@
 # oops-skills
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![Status](https://img.shields.io/badge/status-production-brightgreen.svg)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Status](https://img.shields.io/badge/status-production-brightgreen.svg)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-A polished starter kit for AI-assisted development workflows — designed to work with Claude Code, Cursor, GitHub Copilot, and any markdown-aware coding agent.
+> A structured starter kit for AI-assisted development — giving every tool the same source of truth, the same workflow, and the same project context.
 
-It gives every tool the same source of truth, the same workflow, and the same project context.
-
----
-
-## Mục lục
-
-- [Tổng quan](#tổng-quan)
-- [Tại sao tồn tại](#tại-sao-tồn-tại)
-- [Bắt đầu nhanh](#bắt-đầu-nhanh)
-- [Quy trình hàng ngày](#quy-trình-hàng-ngày)
-- [Cấu trúc thư mục](#cấu-trúc-thư-mục)
-- [Nguyên tắc thiết kế](#nguyên-tắc-thiết-kế)
-- [Legacy (Hỗ trợ thế hệ cũ)](#legacy-hỗ-trợ-thế-hệ-cũ)
-- [Tùy chỉnh & đóng góp](#tùy-chỉnh--đóng-góp)
+**[Tiếng Việt](README.vi.md)** | English
 
 ---
 
-## Tổng quan
+## Table of Contents
 
-`oops-skills` là một starter kit được đóng gói để chuẩn hóa cách các công cụ AI tương tác với repository của bạn. Thay vì rải hướng dẫn và lệnh ra nhiều tập tin, kit này gom mọi thứ quan trọng vào thư mục `.ai/` để các adapter (Claude, Cursor, Copilot, ...) đều có thể tham chiếu cùng một nguồn chân thật.
-
----
-
-## Tại sao tồn tại
-
-Phần lớn workflow AI thất bại vì:
-
-- Hướng dẫn nằm rải rác ở nhiều nơi
-- Các lệnh được đoán mò thay vì định nghĩa rõ
-- Quy trình khác nhau giữa các công cụ
-- Ngữ cảnh nhanh chóng trở nên lỗi thời
-
-`oops-skills` khắc phục bằng cách: đặt kiến thức dự án trong `.ai/`, và để mọi adapter trỏ về đó.
+- [Overview](#overview)
+- [Why it exists](#why-it-exists)
+- [Quick start](#quick-start)
+- [Daily workflow](#daily-workflow)
+- [Directory structure](#directory-structure)
+- [Design principles](#design-principles)
+- [Legacy support](#legacy-support)
+- [Contributing](#contributing)
 
 ---
 
-## Bắt đầu nhanh
+## Overview
 
-Sao chép vào dự án của bạn:
+`oops-skills` is a drop-in starter kit that standardizes how AI tools interact with your repository.
+
+Instead of scattering instructions and commands across many files, it consolidates everything important into a `.ai/` directory — so Claude Code, Cursor, GitHub Copilot, and any other markdown-aware agent all share the same knowledge base.
+
+---
+
+## Why it exists
+
+Most AI workflows break down because:
+
+- Instructions are scattered across multiple places
+- Commands are guessed rather than explicitly defined
+- Each tool follows a different process
+- Context goes stale quickly
+
+`oops-skills` fixes this by putting all project knowledge in `.ai/` and having every adapter point there.
+
+---
+
+## Quick start
+
+Copy into your project:
 
 ```bash
 cp -r oops-skills/. your-project/
 ```
 
-Sau đó chạy:
+Then run:
 
-```text
+```
 /setup-ai-context
 ```
 
-Lệnh này tự động phát hiện stack và điền các tập tin cốt lõi trong `.ai/`.
+This command auto-detects your stack and fills in the core files under `.ai/`.
 
-Nếu muốn cấu hình bằng tay, chỉnh những file sau:
+To configure manually, edit these three files:
 
-1. `.ai/context/architecture.md` — tổng quan hệ thống
-2. `.ai/context/conventions.md` — quy tắc mã hoá với ví dụ ❌/✅
-3. `.ai/commands.md` — các lệnh build/test/lint/deploy thực tế
+| File | Purpose |
+|------|---------|
+| `.ai/context/architecture.md` | System overview — what it is, who uses it |
+| `.ai/context/conventions.md` | Coding rules with ❌/✅ examples |
+| `.ai/commands.md` | Actual build / test / lint / deploy commands |
 
 ---
 
-## Quy trình hàng ngày
+## Daily workflow
 
-1) Thiết lập một lần
+### 1. One-time setup
 
-```text
+```
 /setup-ai-context
 ```
 
-2) Đồng bộ trước khi bắt đầu làm việc
+### 2. Sync before starting work
 
-```text
+```
 /sync-ai-context
 ```
 
-3) Luồng tác vụ (xem chi tiết trong `.ai/workflows/task-flow.md`)
+### 3. Task flow (see `.ai/workflows/task-flow.md` for full detail)
 
+```
 Phase 1 — Brief
-  - `/clarify-scope`          Nhỏ/rõ → tiếp tục. Lớn/mơ hồ → hỏi 1 câu + nêu giả định
-  - `/write-spec`             Biên dịch ngữ cảnh thành `.ai/tasks/<name>.md`
-  - `/plan-tasks`             Chia spec thành các bước có tiêu chí "Done when:"
+  /clarify-scope          Small/clear → proceed. Large/vague → ask + state assumptions
+  /write-spec             Compile context into .ai/tasks/<name>.md
+  /plan-tasks             Break spec into steps with "Done when:" criteria
 
 Phase 2 — Implement
-  - `/implement-tdd`          Red → Green → Refactor cho từng bước
+  /implement-tdd          Red → Green → Refactor for each step
 
 Phase 3 — Self-check
-  - `/write-test-scenarios`   Viết kịch bản chấp nhận và test case
-  - Checklist: tests xanh, lint sạch, conventions tuân thủ, security được kiểm tra
+  /write-test-scenarios   Write acceptance scenarios and test cases
+  ✓ Tests green, lint clean, conventions followed, security checked
 
 Phase 4 — Ship
-  - `/review-pr`              Review diff so với spec
-  - `/create-pr-description`  Tự động sinh mô tả PR từ spec
-  - `/ship`                  Push branch, mở PR, cập nhật status, dọn dẹp task file
+  /review-pr              Review diff against spec
+  /create-pr-description  Auto-generate PR description from spec
+  /ship                   Push branch, open PR, clean up task file
+```
 
 ---
 
-## Cấu trúc thư mục (tóm tắt)
+## Directory structure
 
 ```
 .ai/                          # Single source of truth for all agents
-├── commands.md               # Abstract commands → project shell commands
+├── commands.md               # Abstract commands → actual shell commands
 ├── status.md                 # Shared coordination state
 ├── context/
-│   ├── architecture.md
-│   ├── conventions.md
-│   └── domain-glossary.md
+│   ├── architecture.md       # System overview
+│   ├── conventions.md        # Coding rules with examples
+│   ├── security-checklist.md # Pre-ship security checklist
+│   └── domain-glossary.md    # Project-specific terms
 ├── workflows/
-│   ├── onboarding.md
-│   └── task-flow.md
+│   ├── onboarding.md         # First-time setup protocol
+│   └── task-flow.md          # 4-phase task lifecycle
 ├── tasks/
-│   ├── TEMPLATE.md
-│   └── <name>.md
-└── decisions/                # ADRs
+│   ├── TEMPLATE.md           # Task brief template
+│   └── <name>.md             # Active task briefs
+└── decisions/                # Architecture Decision Records (ADRs)
 
 .claude/skills/               # Claude Code adapter scripts
 .github/
-└── copilot-instructions.md   # Copilot adapter
+└── copilot-instructions.md   # GitHub Copilot adapter
+.cursorrules                  # Cursor adapter
 ```
 
 ---
 
-## Nguyên tắc thiết kế
+## Design principles
 
-1. `.ai/` là nguồn chân thật: cập nhật một nơi, mọi adapter hưởng lợi.
-2. Các lệnh phải rõ ràng và có thể thực thi: đừng đoán `npm test` nếu dự án dùng `make test`.
-3. Workflow đọc được và không phụ thuộc plugin bí ẩn.
-4. Spec dẫn dắt mọi thứ: Spec → Plan → Implement → Test → Review → PR → Ship.
-5. Trạng thái phối hợp lưu trong file (`status.md`) để nhiều agent cùng làm việc an toàn.
-
----
-
-## Legacy (Hỗ trợ thế hệ cũ)
-
-Để giúp các dự án đã tồn tại hoặc adapter cũ không phải thay đổi ngay, thêm phần hỗ trợ "legacy" như sau:
-
-- Thêm `LEGACY.md` (nếu cần) mô tả cách mapping các lệnh cũ sang `.ai/commands.md` mới.
-- Cung cấp script `legacy-migrate.sh` (tùy chọn) để detect và báo các lệnh/CI đã cũ.
-- Trong README hiển thị liên kết rõ ràng tới `LEGACY.md` và nêu "Nếu bạn dùng adapter hoặc CI cũ, xem hướng dẫn Legacy để chuyển đổi nhẹ nhàng."
-
-Gợi ý nội dung `LEGACY.md`:
-
-- Bảng mapping: `old-command` → `.ai/commands.md` tương ứng
-- Các bước thủ công tối thiểu để giữ các job CI cũ chạy song song
-- Lời khuyên rollback nếu migration xảy ra lỗi
+1. **`.ai/` is the single source of truth** — update one place, every adapter benefits.
+2. **Commands must be explicit and runnable** — don't guess `npm test` if the project uses `make test`.
+3. **Workflows are readable and plugin-free** — no hidden magic, just markdown files.
+4. **Spec drives everything** — Spec → Plan → Implement → Test → Review → PR → Ship.
+5. **Coordination state lives in a file** — `status.md` lets multiple agents work safely in parallel.
 
 ---
 
-## Tùy chỉnh & đóng góp
+## Legacy support
 
-- Muốn tuỳ chỉnh workflow? Thay `.ai/workflows/*` và cập nhật adapter tương ứng trong thư mục adapter.
-- Muốn đóng góp? Fork → Branch → PR. Vui lòng tuân thủ `.ai/context/conventions.md` trước khi mở PR.
+To help existing projects or older adapters migrate without disruption:
+
+- Add a `LEGACY.md` describing how old commands map to the new `.ai/commands.md`.
+- Optionally provide a `legacy-migrate.sh` script to detect and flag outdated commands in CI.
+- Link `LEGACY.md` clearly from your README so users know where to look.
+
+Suggested `LEGACY.md` contents:
+
+- Mapping table: `old-command` → equivalent in `.ai/commands.md`
+- Minimal manual steps to keep old CI jobs running in parallel
+- Rollback advice if migration hits an issue
 
 ---
 
-Nếu muốn, tôi có thể:
-- Thêm badges (CI, coverage) với URL thực tế
-- Tạo `LEGACY.md` và script mẫu `legacy-migrate.sh`
-- Viết phiên bản README tiếng Anh song song
+## Contributing
 
-Cho tôi biết bạn muốn tôi thêm gì — tôi sẽ cập nhật tiếp.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
+
+Quick summary:
+- Fork → branch off `main` → open a PR
+- Follow `.ai/context/conventions.md` before opening a PR
+- Run the self-check in `.ai/workflows/task-flow.md` Phase 3 before requesting review
+
+---
+
+Licensed under the [MIT License](LICENSE).
