@@ -1,12 +1,26 @@
-# oops-skills
+<p align="center">
+  <img src="assets/icon.png" width="96" alt="oops-skills icon" />
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-production-brightgreen.svg)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+<h1 align="center">oops-skills</h1>
 
-> Starter kit có cấu trúc cho phát triển hỗ trợ bởi AI — cho mọi công cụ cùng một nguồn chân thật, cùng một quy trình, và cùng một ngữ cảnh dự án.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+  <img src="https://img.shields.io/badge/status-production-brightgreen.svg" alt="Status" />
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" /></a>
+</p>
 
-[English](README.md) | **Tiếng Việt**
+<p align="center">
+  <em>Starter kit có cấu trúc cho phát triển hỗ trợ bởi AI — cho mọi công cụ cùng một nguồn chân thật, cùng một quy trình, và cùng một ngữ cảnh dự án.</em>
+</p>
+
+<p align="center">
+  <a href="README.md">English</a> | <strong>Tiếng Việt</strong>
+</p>
+
+<p align="center">
+  <img src="assets/banner.png" alt="oops-skills banner" />
+</p>
 
 ---
 

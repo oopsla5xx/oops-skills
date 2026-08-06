@@ -1,12 +1,26 @@
-# oops-skills
+<p align="center">
+  <img src="assets/icon.png" width="96" alt="oops-skills icon" />
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-production-brightgreen.svg)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+<h1 align="center">oops-skills</h1>
 
-> A structured starter kit for AI-assisted development — giving every tool the same source of truth, the same workflow, and the same project context.
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" /></a>
+  <img src="https://img.shields.io/badge/status-production-brightgreen.svg" alt="Status" />
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" /></a>
+</p>
 
-**[Tiếng Việt](README.vi.md)** | English
+<p align="center">
+  <em>A structured starter kit for AI-assisted development — giving every tool the same source of truth, the same workflow, and the same project context.</em>
+</p>
+
+<p align="center">
+  <strong><a href="README.vi.md">Tiếng Việt</a></strong> | English
+</p>
+
+<p align="center">
+  <img src="assets/banner.png" alt="oops-skills banner" />
+</p>
 
 ---
 
